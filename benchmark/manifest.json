@@ -1,0 +1,2041 @@
+{
+  "source_file": "datasets_mouse_brain_map_BrainReceptorShowcase_Slice2_Replicate1_images_mosaic_DAPI_z0.tif",
+  "grid": [
+    3,
+    3
+  ],
+  "tile_size": 1024,
+  "overlap": 0.15,
+  "step": 870,
+  "extent": 2764,
+  "interpolation_order": 5,
+  "distortion_model": "shared k1/k2 radial model per tile, local tile-centered coordinates",
+  "position_noise_distribution": "uniform integer in [-level, level] independently for y and x",
+  "position_noise_pairing": "same realization reused across k1 levels within (crop, seed, noise)",
+  "zero_noise_seed_policy": "only the first seed is retained because all zero-noise seeds are identical",
+  "k1_values": [
+    -0.008,
+    0.0,
+    0.008
+  ],
+  "k2_values": [
+    0.0
+  ],
+  "noise_values": [
+    0,
+    10
+  ],
+  "seeds": [
+    2026,
+    2027
+  ],
+  "crops": [
+    {
+      "id": 0,
+      "xy": [
+        26000,
+        6000
+      ],
+      "file": "source_crop_0.tif",
+      "shape": [
+        6144,
+        6144
+      ],
+      "dtype": "uint16",
+      "intensity_min": 317.0,
+      "intensity_max": 52165.0
+    },
+    {
+      "id": 1,
+      "xy": [
+        38000,
+        6000
+      ],
+      "file": "source_crop_1.tif",
+      "shape": [
+        6144,
+        6144
+      ],
+      "dtype": "uint16",
+      "intensity_min": 784.0,
+      "intensity_max": 45307.0
+    },
+    {
+      "id": 2,
+      "xy": [
+        6000,
+        40000
+      ],
+      "file": "source_crop_2.tif",
+      "shape": [
+        6144,
+        6144
+      ],
+      "dtype": "uint16",
+      "intensity_min": 339.0,
+      "intensity_max": 51041.0
+    },
+    {
+      "id": 3,
+      "xy": [
+        50000,
+        44000
+      ],
+      "file": "source_crop_3.tif",
+      "shape": [
+        6144,
+        6144
+      ],
+      "dtype": "uint16",
+      "intensity_min": 554.0,
+      "intensity_max": 53297.0
+    }
+  ],
+  "case_count": 36,
+  "cases": [
+    {
+      "case": "c0_s2026_k1_m0.0080_noise_00",
+      "file": "cases\\c0_s2026_k1_m0.0080_noise_00.npz",
+      "crop_id": 0,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 2026,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2026_k1_m0.0080_noise_10",
+      "file": "cases\\c0_s2026_k1_m0.0080_noise_10.npz",
+      "crop_id": 0,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 12116,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2026_k1_p0.0000_noise_00",
+      "file": "cases\\c0_s2026_k1_p0.0000_noise_00.npz",
+      "crop_id": 0,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 2026,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2026_k1_p0.0000_noise_10",
+      "file": "cases\\c0_s2026_k1_p0.0000_noise_10.npz",
+      "crop_id": 0,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 12116,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2026_k1_p0.0080_noise_00",
+      "file": "cases\\c0_s2026_k1_p0.0080_noise_00.npz",
+      "crop_id": 0,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 2026,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2026_k1_p0.0080_noise_10",
+      "file": "cases\\c0_s2026_k1_p0.0080_noise_10.npz",
+      "crop_id": 0,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 12116,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2027_k1_m0.0080_noise_10",
+      "file": "cases\\c0_s2027_k1_m0.0080_noise_10.npz",
+      "crop_id": 0,
+      "seed": 2027,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 12117,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2027_k1_p0.0000_noise_10",
+      "file": "cases\\c0_s2027_k1_p0.0000_noise_10.npz",
+      "crop_id": 0,
+      "seed": 2027,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 12117,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c0_s2027_k1_p0.0080_noise_10",
+      "file": "cases\\c0_s2027_k1_p0.0080_noise_10.npz",
+      "crop_id": 0,
+      "seed": 2027,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 12117,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2026_k1_m0.0080_noise_00",
+      "file": "cases\\c1_s2026_k1_m0.0080_noise_00.npz",
+      "crop_id": 1,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 1002029,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2026_k1_m0.0080_noise_10",
+      "file": "cases\\c1_s2026_k1_m0.0080_noise_10.npz",
+      "crop_id": 1,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 1012119,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2026_k1_p0.0000_noise_00",
+      "file": "cases\\c1_s2026_k1_p0.0000_noise_00.npz",
+      "crop_id": 1,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 1002029,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2026_k1_p0.0000_noise_10",
+      "file": "cases\\c1_s2026_k1_p0.0000_noise_10.npz",
+      "crop_id": 1,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 1012119,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2026_k1_p0.0080_noise_00",
+      "file": "cases\\c1_s2026_k1_p0.0080_noise_00.npz",
+      "crop_id": 1,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 1002029,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2026_k1_p0.0080_noise_10",
+      "file": "cases\\c1_s2026_k1_p0.0080_noise_10.npz",
+      "crop_id": 1,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 1012119,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2027_k1_m0.0080_noise_10",
+      "file": "cases\\c1_s2027_k1_m0.0080_noise_10.npz",
+      "crop_id": 1,
+      "seed": 2027,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 1012120,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2027_k1_p0.0000_noise_10",
+      "file": "cases\\c1_s2027_k1_p0.0000_noise_10.npz",
+      "crop_id": 1,
+      "seed": 2027,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 1012120,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c1_s2027_k1_p0.0080_noise_10",
+      "file": "cases\\c1_s2027_k1_p0.0080_noise_10.npz",
+      "crop_id": 1,
+      "seed": 2027,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 1012120,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2026_k1_m0.0080_noise_00",
+      "file": "cases\\c2_s2026_k1_m0.0080_noise_00.npz",
+      "crop_id": 2,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 2002032,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2026_k1_m0.0080_noise_10",
+      "file": "cases\\c2_s2026_k1_m0.0080_noise_10.npz",
+      "crop_id": 2,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 2012122,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2026_k1_p0.0000_noise_00",
+      "file": "cases\\c2_s2026_k1_p0.0000_noise_00.npz",
+      "crop_id": 2,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 2002032,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2026_k1_p0.0000_noise_10",
+      "file": "cases\\c2_s2026_k1_p0.0000_noise_10.npz",
+      "crop_id": 2,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 2012122,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2026_k1_p0.0080_noise_00",
+      "file": "cases\\c2_s2026_k1_p0.0080_noise_00.npz",
+      "crop_id": 2,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 2002032,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2026_k1_p0.0080_noise_10",
+      "file": "cases\\c2_s2026_k1_p0.0080_noise_10.npz",
+      "crop_id": 2,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 2012122,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2027_k1_m0.0080_noise_10",
+      "file": "cases\\c2_s2027_k1_m0.0080_noise_10.npz",
+      "crop_id": 2,
+      "seed": 2027,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 2012123,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2027_k1_p0.0000_noise_10",
+      "file": "cases\\c2_s2027_k1_p0.0000_noise_10.npz",
+      "crop_id": 2,
+      "seed": 2027,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 2012123,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c2_s2027_k1_p0.0080_noise_10",
+      "file": "cases\\c2_s2027_k1_p0.0080_noise_10.npz",
+      "crop_id": 2,
+      "seed": 2027,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 2012123,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2026_k1_m0.0080_noise_00",
+      "file": "cases\\c3_s2026_k1_m0.0080_noise_00.npz",
+      "crop_id": 3,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 3002035,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2026_k1_m0.0080_noise_10",
+      "file": "cases\\c3_s2026_k1_m0.0080_noise_10.npz",
+      "crop_id": 3,
+      "seed": 2026,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 3012125,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2026_k1_p0.0000_noise_00",
+      "file": "cases\\c3_s2026_k1_p0.0000_noise_00.npz",
+      "crop_id": 3,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 3002035,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2026_k1_p0.0000_noise_10",
+      "file": "cases\\c3_s2026_k1_p0.0000_noise_10.npz",
+      "crop_id": 3,
+      "seed": 2026,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 3012125,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2026_k1_p0.0080_noise_00",
+      "file": "cases\\c3_s2026_k1_p0.0080_noise_00.npz",
+      "crop_id": 3,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 0,
+      "case_seed": 3002035,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2026_k1_p0.0080_noise_10",
+      "file": "cases\\c3_s2026_k1_p0.0080_noise_10.npz",
+      "crop_id": 3,
+      "seed": 2026,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 3012125,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2027_k1_m0.0080_noise_10",
+      "file": "cases\\c3_s2027_k1_m0.0080_noise_10.npz",
+      "crop_id": 3,
+      "seed": 2027,
+      "k1_true": -0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 3012126,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2027_k1_p0.0000_noise_10",
+      "file": "cases\\c3_s2027_k1_p0.0000_noise_10.npz",
+      "crop_id": 3,
+      "seed": 2027,
+      "k1_true": 0.0,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 3012126,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    },
+    {
+      "case": "c3_s2027_k1_p0.0080_noise_10",
+      "file": "cases\\c3_s2027_k1_p0.0080_noise_10.npz",
+      "crop_id": 3,
+      "seed": 2027,
+      "k1_true": 0.008,
+      "k2_true": 0.0,
+      "position_noise_max_px": 10,
+      "case_seed": 3012126,
+      "tiles_shape": [
+        9,
+        1024,
+        1024
+      ],
+      "tiles_dtype": "uint16",
+      "positions_true": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          870
+        ],
+        [
+          0,
+          1740
+        ],
+        [
+          870,
+          0
+        ],
+        [
+          870,
+          870
+        ],
+        [
+          870,
+          1740
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          870
+        ],
+        [
+          1740,
+          1740
+        ]
+      ]
+    }
+  ]
+}

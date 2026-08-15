@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.~lock.*#
+
+benchmark/cases/
+benchmark/source_crop_*.tif
+results/dry_run_check/
