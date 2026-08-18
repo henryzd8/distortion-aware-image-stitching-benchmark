@@ -7,7 +7,9 @@ from collections import namedtuple
 import numpy as np
 
 from distortcorrect_stitcher_gpu import (
+    _gpu_backend,
     _integer_positions,
+    _require_cuda,
     assemble,
     correct_tiles_once,
     estimate_k1_once,
@@ -91,12 +93,6 @@ class SequentialStitcher:
             mosaic=mosaic,
             positions_ini=positions_ini,
         )
-
-
-from distortcorrect_stitcher_gpu import (
-    _gpu_backend,
-    _require_cuda,
-)
 
 
 class SequentialStitcherGPU(SequentialStitcher):

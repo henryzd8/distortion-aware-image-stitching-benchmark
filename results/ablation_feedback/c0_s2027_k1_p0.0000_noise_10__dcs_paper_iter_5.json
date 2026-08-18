@@ -1,0 +1,341 @@
+{
+ "case": "c0_s2027_k1_p0.0000_noise_10",
+ "method": "dcs_paper_iter_5",
+ "status": "ok",
+ "k1_true": 0.0,
+ "noise": 10,
+ "ls": 0,
+ "k2_true": 0.0,
+ "device": "cuda",
+ "protocol_version": "2026-08-11-rigorous-v12",
+ "mi_quantization": {
+  "algorithm": "MiniBatchKMeans",
+  "batch_size": 10000,
+  "max_iter": 300,
+  "random_seed": 1000
+ },
+ "warp_backend": "torch_grid_sample_bicubic",
+ "joint_k1_tol": 0.0,
+ "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "n_iterations": 5,
+  "pre_stitch_gamma_schedule": "none",
+  "k1_bounds": [
+   -0.005,
+   0.005
+  ],
+  "k1_update_gamma": 0.5,
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "update_order": "positions_first",
+  "correction_mode": "incremental"
+ },
+ "k1": -9.14747233145297e-07,
+ "k1_err": 9.14747233145297e-07,
+ "k1_signed": -9.14747233145297e-07,
+ "k1_hist": [
+  -4.497634159970896e-07,
+  -2.800813913567737e-07,
+  -1.0779591307102616e-07,
+  -1.0903902429194609e-07,
+  3.193251157153847e-08
+ ],
+ "position_history": [
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    876
+   ],
+   [
+    -7,
+    1746
+   ],
+   [
+    863,
+    6
+   ],
+   [
+    863,
+    876
+   ],
+   [
+    863,
+    1746
+   ],
+   [
+    1733,
+    6
+   ],
+   [
+    1733,
+    876
+   ],
+   [
+    1733,
+    1746
+   ]
+  ],
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    876
+   ],
+   [
+    -7,
+    1746
+   ],
+   [
+    863,
+    6
+   ],
+   [
+    863,
+    876
+   ],
+   [
+    863,
+    1746
+   ],
+   [
+    1733,
+    6
+   ],
+   [
+    1733,
+    876
+   ],
+   [
+    1733,
+    1746
+   ]
+  ],
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    876
+   ],
+   [
+    -7,
+    1746
+   ],
+   [
+    863,
+    6
+   ],
+   [
+    863,
+    876
+   ],
+   [
+    863,
+    1746
+   ],
+   [
+    1733,
+    6
+   ],
+   [
+    1733,
+    876
+   ],
+   [
+    1733,
+    1746
+   ]
+  ],
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    876
+   ],
+   [
+    -7,
+    1746
+   ],
+   [
+    863,
+    6
+   ],
+   [
+    863,
+    876
+   ],
+   [
+    863,
+    1746
+   ],
+   [
+    1733,
+    6
+   ],
+   [
+    1733,
+    876
+   ],
+   [
+    1733,
+    1746
+   ]
+  ],
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    876
+   ],
+   [
+    -7,
+    1746
+   ],
+   [
+    863,
+    6
+   ],
+   [
+    863,
+    876
+   ],
+   [
+    863,
+    1746
+   ],
+   [
+    1733,
+    6
+   ],
+   [
+    1733,
+    876
+   ],
+   [
+    1733,
+    1746
+   ]
+  ]
+ ],
+ "iterations": 5,
+ "positions": [
+  [
+   -7,
+   6
+  ],
+  [
+   -7,
+   876
+  ],
+  [
+   -7,
+   1746
+  ],
+  [
+   863,
+   6
+  ],
+  [
+   863,
+   876
+  ],
+  [
+   863,
+   1746
+  ],
+  [
+   1733,
+   6
+  ],
+  [
+   1733,
+   876
+  ],
+  [
+   1733,
+   1746
+  ]
+ ],
+ "positions_pre": [
+  [
+   -7,
+   6
+  ],
+  [
+   -7,
+   876
+  ],
+  [
+   -7,
+   1746
+  ],
+  [
+   863,
+   6
+  ],
+  [
+   863,
+   876
+  ],
+  [
+   863,
+   1746
+  ],
+  [
+   1733,
+   6
+  ],
+  [
+   1733,
+   876
+  ],
+  [
+   1733,
+   1746
+  ]
+ ],
+ "selected_start": null,
+ "selection_scores": null,
+ "candidate_k1": null,
+ "candidate_positions": null,
+ "candidate_times_s": null,
+ "final_selection_score": null,
+ "pos_rmse": 0.0,
+ "pos_mae": 0.0,
+ "pos_max": 0.0,
+ "pre_rmse": 0.0,
+ "pre_mae": 0.0,
+ "at_bound": false,
+ "time_s": 297.27,
+ "distortion_psnr": 129.5808726494948,
+ "distortion_ssim": 0.9999999999467134,
+ "distortion_ncc": 0.999999999990164,
+ "distortion_mse": 0.00047299804159058306,
+ "distortion_valid_fraction": 0.18407228257921007,
+ "distortion_coverage_fraction": 1.0,
+ "psnr": 129.5808726494948,
+ "ssim": 0.9999999999467134,
+ "ncc": 0.999999999990164,
+ "mse": 0.00047299804159058306,
+ "valid_fraction": 0.18407228257921007,
+ "coverage_fraction": 1.0,
+ "seam_true": 8.886249301676173e-08,
+ "seam_est": 8.886249301676173e-08
+}

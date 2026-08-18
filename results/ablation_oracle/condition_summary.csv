@@ -1,0 +1,9 @@
+method,k1_true,k2_true,noise,n,median_k1_error,median_position_rmse
+oracle_k1_paper,-0.008,0.0,0,4,0.0,0.0
+oracle_k1_paper,-0.008,0.0,10,8,0.0,0.0
+oracle_k1_paper,0.008,0.0,0,4,0.0,0.0
+oracle_k1_paper,0.008,0.0,10,8,0.0,0.0
+sequential_paper_matched,-0.008,0.0,0,4,0.005511762681084532,9.595062083010816
+sequential_paper_matched,-0.008,0.0,10,8,0.005511762681084532,9.595062083010816
+sequential_paper_matched,0.008,0.0,0,4,0.005624381129705111,9.162059387254292
+sequential_paper_matched,0.008,0.0,10,8,0.0056042412592759005,9.180280436333746

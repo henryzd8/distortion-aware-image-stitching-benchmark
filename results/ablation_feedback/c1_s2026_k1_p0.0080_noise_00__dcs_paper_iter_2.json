@@ -1,0 +1,224 @@
+{
+ "case": "c1_s2026_k1_p0.0080_noise_00",
+ "method": "dcs_paper_iter_2",
+ "status": "ok",
+ "k1_true": 0.008,
+ "noise": 0,
+ "ls": 0,
+ "k2_true": 0.0,
+ "device": "cuda",
+ "protocol_version": "2026-08-11-rigorous-v12",
+ "mi_quantization": {
+  "algorithm": "MiniBatchKMeans",
+  "batch_size": 10000,
+  "max_iter": 300,
+  "random_seed": 1000
+ },
+ "warp_backend": "torch_grid_sample_bicubic",
+ "joint_k1_tol": 0.0,
+ "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "n_iterations": 2,
+  "pre_stitch_gamma_schedule": "none",
+  "k1_bounds": [
+   -0.005,
+   0.005
+  ],
+  "k1_update_gamma": 0.5,
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "update_order": "positions_first",
+  "correction_mode": "incremental"
+ },
+ "k1": 0.0017123074728149683,
+ "k1_err": 0.006287692527185032,
+ "k1_signed": -0.006287692527185032,
+ "k1_hist": [
+  0.0009863533667408982,
+  0.0007259541060740701
+ ],
+ "position_history": [
+  [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    878
+   ],
+   [
+    1,
+    1756
+   ],
+   [
+    878,
+    0
+   ],
+   [
+    878,
+    879
+   ],
+   [
+    877,
+    1756
+   ],
+   [
+    1755,
+    0
+   ],
+   [
+    1756,
+    879
+   ],
+   [
+    1756,
+    1755
+   ]
+  ],
+  [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    878
+   ],
+   [
+    1,
+    1755
+   ],
+   [
+    878,
+    1
+   ],
+   [
+    878,
+    878
+   ],
+   [
+    877,
+    1755
+   ],
+   [
+    1754,
+    1
+   ],
+   [
+    1755,
+    878
+   ],
+   [
+    1755,
+    1754
+   ]
+  ]
+ ],
+ "iterations": 2,
+ "positions": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   878
+  ],
+  [
+   1,
+   1755
+  ],
+  [
+   878,
+   1
+  ],
+  [
+   878,
+   878
+  ],
+  [
+   877,
+   1755
+  ],
+  [
+   1754,
+   1
+  ],
+  [
+   1755,
+   878
+  ],
+  [
+   1755,
+   1754
+  ]
+ ],
+ "positions_pre": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   878
+  ],
+  [
+   1,
+   1756
+  ],
+  [
+   878,
+   0
+  ],
+  [
+   878,
+   879
+  ],
+  [
+   877,
+   1756
+  ],
+  [
+   1755,
+   0
+  ],
+  [
+   1755,
+   879
+  ],
+  [
+   1755,
+   1755
+  ]
+ ],
+ "selected_start": null,
+ "selection_scores": null,
+ "candidate_k1": null,
+ "candidate_positions": null,
+ "candidate_times_s": null,
+ "final_selection_score": null,
+ "pos_rmse": 13.59738536958076,
+ "pos_mae": 7.666666666666667,
+ "pos_max": 15.0,
+ "pre_rmse": 14.204850501775011,
+ "pre_mae": 7.888888888888889,
+ "at_bound": false,
+ "time_s": 262.99,
+ "distortion_psnr": 48.795300604650876,
+ "distortion_ssim": 0.9967380844976796,
+ "distortion_ncc": 0.9991318945606392,
+ "distortion_mse": 56678.264953101,
+ "distortion_valid_fraction": 0.18407228257921007,
+ "distortion_coverage_fraction": 1.0,
+ "psnr": 31.049944862716814,
+ "ssim": 0.966383152772151,
+ "ncc": 0.9480899130747459,
+ "mse": 3372501.2651105328,
+ "valid_fraction": 0.18407228257921007,
+ "coverage_fraction": 0.9996255304745084,
+ "seam_true": 0.007770010682800008,
+ "seam_est": 0.0035997845957421986
+}

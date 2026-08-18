@@ -1,0 +1,224 @@
+{
+ "case": "c0_s2027_k1_p0.0080_noise_10",
+ "method": "dcs_paper_iter_2",
+ "status": "ok",
+ "k1_true": 0.008,
+ "noise": 10,
+ "ls": 0,
+ "k2_true": 0.0,
+ "device": "cuda",
+ "protocol_version": "2026-08-11-rigorous-v12",
+ "mi_quantization": {
+  "algorithm": "MiniBatchKMeans",
+  "batch_size": 10000,
+  "max_iter": 300,
+  "random_seed": 1000
+ },
+ "warp_backend": "torch_grid_sample_bicubic",
+ "joint_k1_tol": 0.0,
+ "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "n_iterations": 2,
+  "pre_stitch_gamma_schedule": "none",
+  "k1_bounds": [
+   -0.005,
+   0.005
+  ],
+  "k1_update_gamma": 0.5,
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "update_order": "positions_first",
+  "correction_mode": "incremental"
+ },
+ "k1": 0.002039147970823703,
+ "k1_err": 0.005960852029176298,
+ "k1_signed": -0.005960852029176298,
+ "k1_hist": [
+  0.0011493397297876469,
+  0.0008898082410360561
+ ],
+ "position_history": [
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    883
+   ],
+   [
+    -7,
+    1760
+   ],
+   [
+    870,
+    6
+   ],
+   [
+    870,
+    883
+   ],
+   [
+    870,
+    1760
+   ],
+   [
+    1749,
+    5
+   ],
+   [
+    1748,
+    883
+   ],
+   [
+    1748,
+    1760
+   ]
+  ],
+  [
+   [
+    -7,
+    6
+   ],
+   [
+    -7,
+    882
+   ],
+   [
+    -7,
+    1759
+   ],
+   [
+    869,
+    6
+   ],
+   [
+    870,
+    883
+   ],
+   [
+    869,
+    1759
+   ],
+   [
+    1747,
+    5
+   ],
+   [
+    1746,
+    883
+   ],
+   [
+    1746,
+    1759
+   ]
+  ]
+ ],
+ "iterations": 2,
+ "positions": [
+  [
+   -7,
+   6
+  ],
+  [
+   -7,
+   882
+  ],
+  [
+   -7,
+   1759
+  ],
+  [
+   869,
+   6
+  ],
+  [
+   870,
+   883
+  ],
+  [
+   869,
+   1759
+  ],
+  [
+   1747,
+   5
+  ],
+  [
+   1746,
+   883
+  ],
+  [
+   1746,
+   1759
+  ]
+ ],
+ "positions_pre": [
+  [
+   -7,
+   6
+  ],
+  [
+   -7,
+   883
+  ],
+  [
+   -7,
+   1759
+  ],
+  [
+   870,
+   6
+  ],
+  [
+   870,
+   883
+  ],
+  [
+   870,
+   1759
+  ],
+  [
+   1748,
+   5
+  ],
+  [
+   1747,
+   883
+  ],
+  [
+   1747,
+   1759
+  ]
+ ],
+ "selected_start": null,
+ "selection_scores": null,
+ "candidate_k1": null,
+ "candidate_positions": null,
+ "candidate_times_s": null,
+ "final_selection_score": null,
+ "pos_rmse": 12.004628736912737,
+ "pos_mae": 6.611111111111111,
+ "pos_max": 14.0,
+ "pre_rmse": 12.556538801224908,
+ "pre_mae": 6.944444444444445,
+ "at_bound": false,
+ "time_s": 255.73,
+ "distortion_psnr": 51.73120470590388,
+ "distortion_ssim": 0.9979493883826034,
+ "distortion_ncc": 0.9994000999007684,
+ "distortion_mse": 28828.77156923599,
+ "distortion_valid_fraction": 0.18407228257921007,
+ "distortion_coverage_fraction": 1.0,
+ "psnr": 33.96797094197145,
+ "ssim": 0.9763509006562276,
+ "ncc": 0.9641633294064559,
+ "mse": 1722461.4598614257,
+ "valid_fraction": 0.18407228257921007,
+ "coverage_fraction": 1.0,
+ "seam_true": 0.004114021316273691,
+ "seam_est": 0.0018744550780121405
+}

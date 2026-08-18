@@ -1,0 +1,224 @@
+{
+ "case": "c1_s2026_k1_p0.0000_noise_10",
+ "method": "dcs_paper_iter_2",
+ "status": "ok",
+ "k1_true": 0.0,
+ "noise": 10,
+ "ls": 0,
+ "k2_true": 0.0,
+ "device": "cuda",
+ "protocol_version": "2026-08-11-rigorous-v12",
+ "mi_quantization": {
+  "algorithm": "MiniBatchKMeans",
+  "batch_size": 10000,
+  "max_iter": 300,
+  "random_seed": 1000
+ },
+ "warp_backend": "torch_grid_sample_bicubic",
+ "joint_k1_tol": 0.0,
+ "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "n_iterations": 2,
+  "pre_stitch_gamma_schedule": "none",
+  "k1_bounds": [
+   -0.005,
+   0.005
+  ],
+  "k1_update_gamma": 0.5,
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "update_order": "positions_first",
+  "correction_mode": "incremental"
+ },
+ "k1": -1.0940063924641477e-06,
+ "k1_err": 1.0940063924641477e-06,
+ "k1_signed": -1.0940063924641477e-06,
+ "k1_hist": [
+  -7.06288856404917e-07,
+  -3.8771753605923073e-07
+ ],
+ "position_history": [
+  [
+   [
+    7,
+    -8
+   ],
+   [
+    7,
+    862
+   ],
+   [
+    7,
+    1732
+   ],
+   [
+    877,
+    -8
+   ],
+   [
+    877,
+    862
+   ],
+   [
+    877,
+    1732
+   ],
+   [
+    1747,
+    -8
+   ],
+   [
+    1747,
+    862
+   ],
+   [
+    1747,
+    1732
+   ]
+  ],
+  [
+   [
+    7,
+    -8
+   ],
+   [
+    7,
+    862
+   ],
+   [
+    7,
+    1732
+   ],
+   [
+    877,
+    -8
+   ],
+   [
+    877,
+    862
+   ],
+   [
+    877,
+    1732
+   ],
+   [
+    1747,
+    -8
+   ],
+   [
+    1747,
+    862
+   ],
+   [
+    1747,
+    1732
+   ]
+  ]
+ ],
+ "iterations": 2,
+ "positions": [
+  [
+   7,
+   -8
+  ],
+  [
+   7,
+   862
+  ],
+  [
+   7,
+   1732
+  ],
+  [
+   877,
+   -8
+  ],
+  [
+   877,
+   862
+  ],
+  [
+   877,
+   1732
+  ],
+  [
+   1747,
+   -8
+  ],
+  [
+   1747,
+   862
+  ],
+  [
+   1747,
+   1732
+  ]
+ ],
+ "positions_pre": [
+  [
+   7,
+   -8
+  ],
+  [
+   7,
+   862
+  ],
+  [
+   7,
+   1732
+  ],
+  [
+   877,
+   -8
+  ],
+  [
+   877,
+   862
+  ],
+  [
+   877,
+   1732
+  ],
+  [
+   1747,
+   -8
+  ],
+  [
+   1747,
+   862
+  ],
+  [
+   1747,
+   1732
+  ]
+ ],
+ "selected_start": null,
+ "selection_scores": null,
+ "candidate_k1": null,
+ "candidate_positions": null,
+ "candidate_times_s": null,
+ "final_selection_score": null,
+ "pos_rmse": 0.0,
+ "pos_mae": 0.0,
+ "pos_max": 0.0,
+ "pre_rmse": 0.0,
+ "pre_mae": 0.0,
+ "at_bound": false,
+ "time_s": 284.36,
+ "distortion_psnr": 124.0543991597726,
+ "distortion_ssim": 0.9999999998260317,
+ "distortion_ncc": 0.9999999999741577,
+ "distortion_mse": 0.0016885218758131257,
+ "distortion_valid_fraction": 0.18407228257921007,
+ "distortion_coverage_fraction": 1.0,
+ "psnr": 124.0543991597726,
+ "ssim": 0.9999999998260317,
+ "ncc": 0.9999999999741577,
+ "mse": 0.0016885218758131257,
+ "valid_fraction": 0.18407228257921007,
+ "coverage_fraction": 1.0,
+ "seam_true": 5.231861152123226e-07,
+ "seam_est": 5.231861152123226e-07
+}

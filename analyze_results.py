@@ -12,11 +12,9 @@ from run_final_experiment import METHODS, PRIMARY_METHODS
 
 ERROR_METRICS = ("k1_err", "k1_signed", "pos_rmse", "pos_mae", "pos_max",
                  "seam_true", "seam_est")
-QUALITY_METRICS = ("psnr", "ssim", "ncc",
-                   "mse",
+QUALITY_METRICS = ("psnr", "ssim", "ncc", "mse",
                    "coverage_fraction", "distortion_psnr",
-                   "distortion_ssim", "distortion_ncc",
-                   "distortion_mse",
+                   "distortion_ssim", "distortion_ncc", "distortion_mse",
                    "distortion_coverage_fraction")
 ALL_METRICS = ERROR_METRICS + QUALITY_METRICS + ("time_s", "iterations")
 EXTRA_COLUMNS = ("pre_rmse", "pre_mae", "at_bound")
@@ -36,6 +34,22 @@ COMPARISONS = {
         "joint_stabilized", "sequential_matched_no_prestitch"),
     "joint(no-pre) - sequential(no-pre)": (
         "joint_matched_no_prestitch", "sequential_matched_no_prestitch"),
+    "paper-style no-pre - sequential no-pre": (
+        "dcs_paper_no_prestitch", "sequential_paper_no_prestitch"),
+    "1 iteration - 25 iterations": (
+        "dcs_paper_iter_1", "dcs_paper_style"),
+    "2 iterations - 25 iterations": (
+        "dcs_paper_iter_2", "dcs_paper_style"),
+    "5 iterations - 25 iterations": (
+        "dcs_paper_iter_5", "dcs_paper_style"),
+    "10 iterations - 25 iterations": (
+        "dcs_paper_iter_10", "dcs_paper_style"),
+    "sequential bound 0.010 - 0.015": (
+        "sequential_paper_bound_010", "sequential_paper_matched"),
+    "sequential bound 0.020 - 0.015": (
+        "sequential_paper_bound_020", "sequential_paper_matched"),
+    "oracle k1 - sequential": (
+        "oracle_k1_paper", "sequential_paper_matched"),
 }
 
 N_BOOT = 10000
@@ -133,7 +147,6 @@ def paired_deltas(rows, method_a, method_b):
 def bootstrap_ci(deltas, metric, rng, n_boot=N_BOOT):
     # Content-block bootstrap: simulated stage-noise seeds are repeated
     # measurements nested within a crop, not independent microscopy content.
-    # deltas; cases with a NaN delta for this metric are dropped from it
     cases = [c for c in deltas
              if metric in deltas[c] and np.isfinite(deltas[c][metric])]
     if not cases:
@@ -196,7 +209,10 @@ def main():
     if args.reference_results is not None:
         rows.extend(r for r in load_all(args.reference_results, manifest)
                     if r["method"] in methods)
-    if args.cases != "all":
+    if args.cases == "distorted":
+        wanted = {case["case"] for case in manifest["cases"]
+                  if abs(case["k1_true"]) > 1e-12}
+    elif args.cases != "all":
         wanted = {name.strip() for name in args.cases.split(",") if name.strip()}
         if not wanted:
             raise ValueError("case list is empty")
@@ -204,6 +220,9 @@ def main():
         unknown_cases = sorted(wanted - known)
         if unknown_cases:
             raise ValueError(f"unknown cases: {', '.join(unknown_cases)}")
+    else:
+        wanted = None
+    if wanted is not None:
         manifest = dict(manifest)
         manifest["cases"] = [case for case in manifest["cases"]
                              if case["case"] in wanted]
@@ -305,7 +324,14 @@ def main():
         except ImportError:
             print("matplotlib not available; skipping plots")
             return
-        plot_pairs = list(comparisons.items())[:2]
+        plot_pairs = []
+        for label, pair in comparisons.items():
+            deltas = paired_deltas(
+                [r for r in rows if abs(r["k2_true"]) < 1e-15], *pair)
+            if deltas:
+                plot_pairs.append((label, pair))
+            if len(plot_pairs) == 2:
+                break
         if not plot_pairs:
             print("no requested method pair is available; skipping plots")
             return

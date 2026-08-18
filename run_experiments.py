@@ -144,6 +144,8 @@ def main():
     check_manifest(args.bench, manifest)
     if args.cases == "all":
         metas = manifest["cases"]
+    elif args.cases == "distorted":
+        metas = [c for c in manifest["cases"] if abs(c["k1_true"]) > 1e-12]
     else:
         wanted = {name.strip() for name in args.cases.split(",") if name.strip()}
         if not wanted:
@@ -169,30 +171,27 @@ def main():
                 method, args.joint_update_order)
             jp = args.out / f"{meta['case']}__{method}.json"
             if jp.exists():
-                try:
-                    old = json.loads(jp.read_text("utf-8"))
-                    if old.get("status") == "ok":
-                        old_cfg = run_config(
-                            old.get("protocol_version"), old.get("ls", -1),
-                            old.get("joint_k1_tol", float("nan")),
-                            old.get("joint_update_order"), old.get("device"),
-                            old.get("warp_backend"), old.get("mi_quantization"),
-                        )
-                        warp_backend = (rfe.WARP_BACKEND
-                                        if args.device == "cuda"
-                                        else "scipy_spline")
-                        new_cfg = run_config(
-                            rfe.PROTOCOL_VERSION, args.local_search,
-                            args.joint_k1_tol, effective_order, args.device,
-                            warp_backend, rfe.MI_QUANTIZATION)
-                        if old_cfg != new_cfg:
-                            raise RuntimeError(
-                                f"{jp} was produced by protocol {old_cfg}, "
-                                f"not {new_cfg}; use a separate --out directory "
-                                "for each ablation")
-                        continue
-                except Exception:
-                    raise
+                old = json.loads(jp.read_text("utf-8"))
+                if old.get("status") == "ok":
+                    old_cfg = run_config(
+                        old.get("protocol_version"), old.get("ls", -1),
+                        old.get("joint_k1_tol", float("nan")),
+                        old.get("joint_update_order"), old.get("device"),
+                        old.get("warp_backend"), old.get("mi_quantization"),
+                    )
+                    warp_backend = (rfe.WARP_BACKEND
+                                    if args.device == "cuda"
+                                    else "scipy_spline")
+                    new_cfg = run_config(
+                        rfe.PROTOCOL_VERSION, args.local_search,
+                        args.joint_k1_tol, effective_order, args.device,
+                        warp_backend, rfe.MI_QUANTIZATION)
+                    if old_cfg != new_cfg:
+                        raise RuntimeError(
+                            f"{jp} was produced by protocol {old_cfg}, "
+                            f"not {new_cfg}; use a separate --out directory "
+                            "for each ablation")
+                    continue
             tasks.append((meta["case"], method))
 
     total_all = len(metas) * len(methods)
