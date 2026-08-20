@@ -17,6 +17,21 @@
  "warp_backend": "torch_grid_sample_bicubic",
  "joint_k1_tol": 0.0,
  "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "n_iterations": 25,
+  "pre_stitch_gamma_schedule": "default",
+  "k1_bounds": [
+   -0.005,
+   0.005
+  ],
+  "k1_update_gamma": 0.5,
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "update_order": "positions_first",
+  "correction_mode": "incremental"
+ },
  "k1": -0.005471021536279185,
  "k1_err": 0.0025289784637208155,
  "k1_signed": 0.0025289784637208155,

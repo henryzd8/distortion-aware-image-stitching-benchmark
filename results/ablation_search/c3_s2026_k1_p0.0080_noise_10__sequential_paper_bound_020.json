@@ -19,7 +19,7 @@
  "joint_update_order": "positions_first",
  "method_settings": {
   "paper_style": true,
-  "pre_stitch_gamma_schedule": "paper_default_16",
+  "pre_stitch_gamma_schedule": "default",
   "k1_bounds": [
    -0.02,
    0.02

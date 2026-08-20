@@ -1,7 +1,9 @@
-# CPU reimplementation of the DistortCorrect Stitcher (Cang et al. 2024).
-# k1_bounds, gamma and the interpolation order are tunable here.
+"""CPU stitching primitives with an optional CUDA execution adapter."""
+
+from __future__ import annotations
 
 from collections import namedtuple
+from typing import Any, Sequence
 
 import numpy as np
 from scipy.ndimage import map_coordinates
@@ -16,8 +18,15 @@ from tqdm import tqdm
 
 # Radial distortion model: r_d = r_u * (1 + k1*r_u^2 + k2*r_u^4 + k3*r_u^6)
 
-def radial_distortion_map(coords, h, w, k1, k2=0.0, k3=0.0):
-    # forward map: undistorted coords -> distorted coords
+def radial_distortion_map(
+    coords: np.ndarray,
+    h: int,
+    w: int,
+    k1: float,
+    k2: float = 0.0,
+    k3: float = 0.0,
+) -> np.ndarray:
+    """Map undistorted pixel coordinates through the radial model."""
     y_u, x_u = coords
     x_c = (x_u - w / 2.0) / (w / 2.0)
     y_c = (y_u - h / 2.0) / (h / 2.0)
@@ -36,7 +45,15 @@ def _saturate(arr, dtype):
     return arr.astype(dtype)
 
 
-def undistort_image(image, k1, k2=0.0, k3=0.0, order=3, mode="nearest"):
+def undistort_image(
+    image: np.ndarray,
+    k1: float,
+    k2: float = 0.0,
+    k3: float = 0.0,
+    order: int = 3,
+    mode: str = "nearest",
+) -> np.ndarray:
+    """Correct one grayscale or channel-first image for radial distortion."""
     h, w = image.shape[-2:]
     y_idx, x_idx = np.indices((h, w), dtype=np.float64)
     coords = np.stack((y_idx.ravel(), x_idx.ravel()))
@@ -58,7 +75,13 @@ def undistort_image(image, k1, k2=0.0, k3=0.0, order=3, mode="nearest"):
     return out
 
 
-def undistort_tiles(tiles, k1s, order=3, mode="nearest"):
+def undistort_tiles(
+    tiles: np.ndarray,
+    k1s: Sequence[float],
+    order: int = 3,
+    mode: str = "nearest",
+) -> np.ndarray:
+    """Apply one or more cumulative distortion corrections to tile data."""
     corrected = tiles.copy()
     for k1 in k1s:
         corrected = np.array([
@@ -70,7 +93,8 @@ def undistort_tiles(tiles, k1s, order=3, mode="nearest"):
 
 # NCC (normalized cross-correlation)
 
-def ncc(image1, image2):
+def ncc(image1: np.ndarray, image2: np.ndarray) -> float:
+    """Return normalized cross-correlation, or zero for constant inputs."""
     a = image1.ravel().astype(np.float64)
     b = image2.ravel().astype(np.float64)
     a_ms = a - a.mean()
@@ -83,7 +107,15 @@ def ncc(image1, image2):
 
 # Overlap geometry: bounding-box intersection of two same-sized tiles
 
-def find_overlap_coords(y1, x1, y2, x2, h, w):
+def find_overlap_coords(
+    y1: int,
+    x1: int,
+    y2: int,
+    x2: int,
+    h: int,
+    w: int,
+) -> tuple[Any, Any]:
+    """Return local overlap slices for two same-sized positioned tiles."""
     ox_start = max(x1, x2)
     ox_end = min(x1 + w, x2 + w)
     oy_start = max(y1, y2)
@@ -149,7 +181,17 @@ def _normalize_overlap(ref, tar, sharpen):
     return ref8, tar8
 
 
-def cal_shift_ij(i, j, tiles, positions0, h, w, gamma=0.1, sharpen=True):
+def cal_shift_ij(
+    i: int,
+    j: int,
+    tiles: np.ndarray,
+    positions0: np.ndarray,
+    h: int,
+    w: int,
+    gamma: float = 0.1,
+    sharpen: bool = True,
+) -> np.ndarray | None:
+    """Estimate a pairwise integer shift from the current tile overlap."""
     positions = positions0.copy()
     pos_i = positions[i]
     pos_j = positions[j]
@@ -216,7 +258,14 @@ def _mi_align_cpu(ref, tar):
     return np.array([param[1], param[2]])
 
 
-def image2cat_kmeans(I, k, batch_size=10000, max_iter=300, random_seed=1000):
+def image2cat_kmeans(
+    I: np.ndarray,
+    k: int,
+    batch_size: int = 10000,
+    max_iter: int = 300,
+    random_seed: int = 1000,
+) -> np.ndarray:
+    """Quantize an image into integer MiniBatchKMeans labels."""
     # The benchmark-wide accelerated profile is explicit and provenance-tracked.
     # The author's 100/1000 profile remains available through explicit arguments
     # for limited source-faithful calibration runs.
@@ -440,10 +489,20 @@ def _integer_positions(positions, n_tiles):
     return np.round(arr).astype(int)
 
 
-def estimate_k1_once(tiles, positions, k1_bounds=(-0.015, 0.015), order=3,
-                     boundary_frac=0.25, boundary_px=None, local_search=5,
-                     outlier_tiles=None, k1_fixed=0.0, gamma=1.0,
-                     skip_diagonal=True):
+def estimate_k1_once(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    k1_bounds: tuple[float, float] = (-0.015, 0.015),
+    order: int = 3,
+    boundary_frac: float = 0.25,
+    boundary_px: int | None = None,
+    local_search: int = 5,
+    outlier_tiles: Sequence[int] | None = None,
+    k1_fixed: float = 0.0,
+    gamma: float = 1.0,
+    skip_diagonal: bool = True,
+) -> np.ndarray:
+    """Estimate a bounded distortion increment from overlap-boundary NCC."""
     # per-channel bounded search for the best k1 increment around
     # k1_fixed, damped by gamma (gamma=1, k1_fixed=0 = one-shot)
     arr = np.asarray(tiles)
@@ -494,7 +553,13 @@ def estimate_k1_once(tiles, positions, k1_bounds=(-0.015, 0.015), order=3,
     return np.asarray(estimates, dtype=float)
 
 
-def correct_tiles_once(tiles, k1, order=3, mode="nearest"):
+def correct_tiles_once(
+    tiles: np.ndarray,
+    k1: Sequence[float] | np.ndarray,
+    order: int = 3,
+    mode: str = "nearest",
+) -> np.ndarray:
+    """Correct grayscale or multichannel tiles using supplied coefficients."""
     arr = np.asarray(tiles)
     estimates = np.asarray(k1, dtype=float).reshape(-1)
 
@@ -518,9 +583,15 @@ def correct_tiles_once(tiles, k1, order=3, mode="nearest"):
 
 # Graph construction & position optimization
 
-def construct_matrix_colors(tiles, positions, gamma=1.0,
-                            ncc_threshold=0.0, sharpen=True,
-                            skip_diagonal=True):
+def construct_matrix_colors(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    gamma: float = 1.0,
+    ncc_threshold: float = 0.0,
+    sharpen: bool = True,
+    skip_diagonal: bool = True,
+) -> nx.Graph:
+    """Build a weighted overlap graph from the current tile layout."""
     G = nx.Graph()
     num_tiles = len(tiles)
     h, w = tiles.shape[-2:]
@@ -566,7 +637,17 @@ def construct_matrix_colors(tiles, positions, gamma=1.0,
     return G
 
 
-def extract_data_from_graph(G):
+def extract_data_from_graph(
+    G: nx.Graph,
+) -> tuple[
+    int,
+    list[tuple[int, int]],
+    list[np.ndarray],
+    list[float],
+    dict[int, int],
+    dict[int, int],
+]:
+    """Extract pairwise shifts and node-index mappings from an overlap graph."""
     nodes = list(G.nodes())
     num_tiles = len(nodes)
 
@@ -587,7 +668,11 @@ def extract_data_from_graph(G):
     return num_tiles, pairs, shifts_ij, weights, node_to_idx, idx_to_node
 
 
-def optimize_shifts_with_graph(G, positions):
+def optimize_shifts_with_graph(
+    G: nx.Graph,
+    positions: np.ndarray,
+) -> tuple[np.ndarray, dict[int, np.ndarray]]:
+    """Solve weighted graph constraints and return corrected positions."""
     # weighted least squares over the pairwise-shift graph
     num_tiles, pairs, shifts_ij, weights, node_to_idx, idx_to_node = \
         extract_data_from_graph(G)
@@ -657,8 +742,16 @@ _DEFAULT_GAMMA_SCHEDULE = [0.1] * 4 + [0.2] * 3 + [0.3] * 2 + \
     [0.4, 0.5, 0.6, 0.8, 0.9, 1]
 
 
-def pr_stitching(tiles, positions, gamma_schedule=None, ncc_threshold=0.0,
-                 sharpen=True, skip_diagonal=True, verbose=False):
+def pr_stitching(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    gamma_schedule: Sequence[float] | None = None,
+    ncc_threshold: float = 0.0,
+    sharpen: bool = True,
+    skip_diagonal: bool = True,
+    verbose: bool = False,
+) -> np.ndarray:
+    """Refine positions with a coarse-to-fine overlap-registration schedule."""
     if gamma_schedule is None:
         gamma_schedule = _DEFAULT_GAMMA_SCHEDULE
 
@@ -678,10 +771,17 @@ def pr_stitching(tiles, positions, gamma_schedule=None, ncc_threshold=0.0,
 
 # Boundary NCC cost function
 
-def cost_boundary_ncc(k1, tiles, positions, order=3, boundary_frac=0.25,
-                      boundary_px=None, local_search=5,
-                      skip_diagonal=True):
-    # undistort at candidate k1, then NCC of boundary strips in each overlap
+def cost_boundary_ncc(
+    k1: float,
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    order: int = 3,
+    boundary_frac: float = 0.25,
+    boundary_px: int | None = None,
+    local_search: int = 5,
+    skip_diagonal: bool = True,
+) -> float:
+    """Score a candidate coefficient using boundary-strip NCC."""
     tiles_corr = undistort_tiles(tiles, [k1], order=order)
 
     total_ncc = 0.0
@@ -778,22 +878,35 @@ def _local_ncc_max(ref, tar, local_search=5):
 
 # Joint optimization loop
 
-def compute_k1_recursive_colors(tiles, positions, outlier_tiles=None,
-                                k1_bounds=(-0.005, 0.005), gamma=0.5,
-                                n_iterations=25, k1_tol=0.0, order=3,
-                                ncc_threshold=0.0, sharpen=True,
-                                boundary_frac=0.25, boundary_px=None,
-                                position_damping=0.2,
-                                local_search=5,
-                                update_order="positions_first",
-                                correction_mode="pristine_cumulative",
-                                skip_diagonal=True,
-                                verbose=False):
+def compute_k1_recursive_colors(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    outlier_tiles: Sequence[int] | None = None,
+    k1_bounds: tuple[float, float] = (-0.005, 0.005),
+    gamma: float = 0.5,
+    n_iterations: int = 25,
+    k1_tol: float = 0.0,
+    order: int = 3,
+    ncc_threshold: float = 0.0,
+    sharpen: bool = True,
+    boundary_frac: float = 0.25,
+    boundary_px: int | None = None,
+    position_damping: float = 0.2,
+    local_search: int = 5,
+    update_order: str = "positions_first",
+    correction_mode: str = "pristine_cumulative",
+    skip_diagonal: bool = True,
+    oracle_k1: float | Sequence[float] | None = None,
+    verbose: bool = False,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[np.ndarray]]:
+    """Alternate graph-based position refinement and radial updates."""
     # positions_first: stitch -> estimate k1 -> re-correct (paper order).
     # distortion_first: estimate k1 -> correct -> stitch (stabilised).
     # k1_tol: stop once every increment stays below it for two iterations.
     # correction_mode selects the benchmark adaptation (fresh correction from
     # pristine tiles) or the paper-style incremental resampling path.
+    # oracle_k1: diagnostic control; inject the exact residual each iteration
+    # instead of estimating it, so the cumulative correction equals oracle_k1.
     was_3d = tiles.ndim == 3
     if was_3d:
         tiles = tiles[:, np.newaxis, :, :]
@@ -801,6 +914,11 @@ def compute_k1_recursive_colors(tiles, positions, outlier_tiles=None,
     ncolors = tiles.shape[1]
     tiles_original = tiles.copy()  # kept pristine for fresh correction
     k1_cumul = np.zeros(ncolors)
+    if oracle_k1 is None:
+        oracle = None
+    else:
+        oracle = np.broadcast_to(
+            np.asarray(oracle_k1, dtype=float), (ncolors,)).copy()
 
     if outlier_tiles is None:
         outlier_tiles = []
@@ -830,18 +948,21 @@ def compute_k1_recursive_colors(tiles, positions, outlier_tiles=None,
     def _estimate_k1_once():
         k1color = []
         for c in range(ncolors):
-            if correction_mode == "pristine_cumulative":
-                estimate_tiles = tiles_original[good_ids, c]
-                k1_fixed = float(k1_cumul[c])
+            if oracle is not None:
+                inc = float(oracle[c]) - k1_cumul[c]
             else:
-                estimate_tiles = tiles_stage[good_ids, c]
-                k1_fixed = 0.0
-            inc = estimate_k1_once(
-                estimate_tiles, positions[good_ids],
-                k1_bounds=k1_bounds, order=order,
-                boundary_frac=boundary_frac, boundary_px=boundary_px,
-                local_search=local_search, k1_fixed=k1_fixed,
-                gamma=gamma, skip_diagonal=skip_diagonal)[0]
+                if correction_mode == "pristine_cumulative":
+                    estimate_tiles = tiles_original[good_ids, c]
+                    k1_fixed = float(k1_cumul[c])
+                else:
+                    estimate_tiles = tiles_stage[good_ids, c]
+                    k1_fixed = 0.0
+                inc = estimate_k1_once(
+                    estimate_tiles, positions[good_ids],
+                    k1_bounds=k1_bounds, order=order,
+                    boundary_frac=boundary_frac, boundary_px=boundary_px,
+                    local_search=local_search, k1_fixed=k1_fixed,
+                    gamma=gamma, skip_diagonal=skip_diagonal)[0]
             k1_cumul[c] += inc
             k1color.append(inc)
             if verbose:
@@ -905,7 +1026,8 @@ def compute_k1_recursive_colors(tiles, positions, outlier_tiles=None,
 
 # Utilities
 
-def sharpen_tiles(tiles):
+def sharpen_tiles(tiles: np.ndarray) -> np.ndarray:
+    """Normalize and unsharp-mask each tile before registration."""
     out = np.copy(tiles).astype(np.float32)
     multichannel = out.ndim == 4
 
@@ -928,8 +1050,12 @@ def sharpen_tiles(tiles):
     return out.astype(np.float32)
 
 
-def assemble(tiles, positions, border=64):
-    # non-blended canvas paste
+def assemble(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    border: int = 64,
+) -> np.ndarray:
+    """Paste corrected tiles into a non-blended local mosaic canvas."""
     h, w = tiles.shape[-2:]
     pos = positions.copy()
 
@@ -971,14 +1097,28 @@ StitcherResult = namedtuple(
 
 
 class DistortCorrectStitcher:
-    def __init__(self, k1_bounds=(-0.005, 0.005), gamma=0.5,
-                 n_iterations=25, k1_tol=0.0, interpolation_order=3,
-                 pre_stitch_gamma_schedule=None, ncc_threshold=0.0,
-                 sharpen=False, boundary_frac=0.25, boundary_px=None,
-                 position_damping=0.2, local_search=5,
-                 update_order="positions_first",
-                 correction_mode="pristine_cumulative", border=64,
-                 skip_diagonal=True):
+    """Iteratively alternate position refinement and distortion updates."""
+
+    def __init__(
+        self,
+        k1_bounds: tuple[float, float] = (-0.005, 0.005),
+        gamma: float = 0.5,
+        n_iterations: int = 25,
+        k1_tol: float = 0.0,
+        interpolation_order: int = 3,
+        pre_stitch_gamma_schedule: Sequence[float] | None = None,
+        ncc_threshold: float = 0.0,
+        sharpen: bool = False,
+        boundary_frac: float = 0.25,
+        boundary_px: int | None = None,
+        position_damping: float = 0.2,
+        local_search: int = 5,
+        update_order: str = "positions_first",
+        correction_mode: str = "pristine_cumulative",
+        border: int = 64,
+        skip_diagonal: bool = True,
+        oracle_k1: float | Sequence[float] | None = None,
+    ) -> None:
         self.k1_bounds = k1_bounds
         self.gamma = gamma
         self.n_iterations = n_iterations
@@ -995,8 +1135,15 @@ class DistortCorrectStitcher:
         self.correction_mode = correction_mode
         self.border = border
         self.skip_diagonal = skip_diagonal
+        self.oracle_k1 = oracle_k1
 
-    def pre_stitch(self, tiles, positions, verbose=False):
+    def pre_stitch(
+        self,
+        tiles: np.ndarray,
+        positions: np.ndarray,
+        verbose: bool = False,
+    ) -> np.ndarray:
+        """Run the configured position-only warm-start schedule."""
         return pr_stitching(
             tiles, positions,
             gamma_schedule=self.pre_stitch_gamma_schedule,
@@ -1006,8 +1153,14 @@ class DistortCorrectStitcher:
             verbose=verbose,
         )
 
-    def joint_optimize(self, tiles, positions,
-                       outlier_tiles=None, verbose=False):
+    def joint_optimize(
+        self,
+        tiles: np.ndarray,
+        positions: np.ndarray,
+        outlier_tiles: Sequence[int] | None = None,
+        verbose: bool = False,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[np.ndarray]]:
+        """Run the configured alternating position/distortion updates."""
         return compute_k1_recursive_colors(
             tiles, positions,
             outlier_tiles=outlier_tiles,
@@ -1025,11 +1178,19 @@ class DistortCorrectStitcher:
             update_order=self.update_order,
             correction_mode=self.correction_mode,
             skip_diagonal=self.skip_diagonal,
+            oracle_k1=self.oracle_k1,
             verbose=verbose,
         )
 
-    def run(self, tiles, positions_ini, outlier_tiles=None,
-            do_sharpen=True, verbose=False):
+    def run(
+        self,
+        tiles: np.ndarray,
+        positions_ini: np.ndarray,
+        outlier_tiles: Sequence[int] | None = None,
+        do_sharpen: bool = True,
+        verbose: bool = False,
+    ) -> StitcherResult:
+        """Execute preprocessing, warm start, iterative optimization, and assembly."""
         tiles_proc = tiles.copy()
 
         if do_sharpen:
@@ -1112,8 +1273,16 @@ def _gpu_grid(h, w, k1, k2, k3, device):
     return torch.stack((gx, gy), dim=-1).unsqueeze(0)
 
 
-def undistort_image_gpu(image, k1, k2=0.0, k3=0.0, order=3,
-                        mode="nearest", device=None):
+def undistort_image_gpu(
+    image: np.ndarray,
+    k1: float,
+    k2: float = 0.0,
+    k3: float = 0.0,
+    order: int = 3,
+    mode: str = "nearest",
+    device: str | None = None,
+) -> np.ndarray:
+    """Correct one image with PyTorch grid sampling on CUDA."""
     import torch
     import torch.nn.functional as F
 
@@ -1142,7 +1311,14 @@ def undistort_image_gpu(image, k1, k2=0.0, k3=0.0, order=3,
     return _saturate(result, original_dtype)
 
 
-def undistort_tiles_gpu(tiles, k1s, order=3, mode="nearest", device=None):
+def undistort_tiles_gpu(
+    tiles: np.ndarray,
+    k1s: Sequence[float],
+    order: int = 3,
+    mode: str = "nearest",
+    device: str | None = None,
+) -> np.ndarray:
+    """Batch-correct tiles with the CUDA warp backend."""
     import torch
     import torch.nn.functional as F
 
@@ -1202,12 +1378,26 @@ def _mi_align_gpu(ref, tar):
 
 
 class DistortCorrectStitcherGPU(DistortCorrectStitcher):
-    def __init__(self, *args, device=None, **kwargs):
+    """CUDA-backed joint stitcher using the shared CPU orchestration."""
+
+    def __init__(
+        self,
+        *args: Any,
+        device: str | None = None,
+        **kwargs: Any,
+    ) -> None:
         self.device = str(_require_cuda(device))
         super().__init__(*args, **kwargs)
 
-    def run(self, tiles, positions_ini, outlier_tiles=None,
-            do_sharpen=True, verbose=False):
+    def run(
+        self,
+        tiles: np.ndarray,
+        positions_ini: np.ndarray,
+        outlier_tiles: Sequence[int] | None = None,
+        do_sharpen: bool = True,
+        verbose: bool = False,
+    ) -> StitcherResult:
+        """Run the joint pipeline with temporary CUDA primitive patches."""
         # Shared graph/scoring code calls the patched GPU primitives.
         with _gpu_backend(self.device):
             return super().run(

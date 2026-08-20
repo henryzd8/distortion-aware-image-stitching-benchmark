@@ -1,14 +1,11 @@
-# Generate the paper figures from the completed result directories.
-#
-#   python make_figures.py --bench benchmark --out figures
-#
-# Produces five PNGs: the primary paired effect, the feedback dose, the
-# pre-stitch interaction, the accuracy-runtime tradeoff, and the signed-k1
-# calibration.
+"""Generate the five publication figures from completed result directories."""
+
+from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import matplotlib
@@ -32,15 +29,22 @@ LABELS = {
     "oracle": "Oracle k1",
 }
 BOOT_SEED = 0
+Record = dict[str, Any]
 
 
-def med(rows, metric):
+def med(rows: list[Record], metric: str) -> float:
+    """Return the finite median for one metric."""
     vals = [r.get(metric) for r in rows if r["status"] == "ok"]
     vals = [v for v in vals if v is not None and np.isfinite(v)]
     return float(np.median(vals)) if vals else float("nan")
 
 
-def paired_by_case(rows_a, rows_b, metric):
+def paired_by_case(
+    rows_a: list[Record],
+    rows_b: list[Record],
+    metric: str,
+) -> dict[str, tuple[float, float]]:
+    """Pair finite metric values by case name."""
     out = {}
     for a in rows_a:
         if a["status"] != "ok":
@@ -57,14 +61,26 @@ def paired_by_case(rows_a, rows_b, metric):
     return out
 
 
-def paired_ci(rows_a, rows_b, method_a, method_b, metric):
+def paired_ci(
+    rows_a: list[Record],
+    rows_b: list[Record],
+    method_a: str,
+    method_b: str,
+    metric: str,
+) -> tuple[float, float, float]:
+    """Return the paired median and bootstrap interval for one metric."""
     # delta = rows_a - rows_b per case; negative favours rows_a for errors.
     deltas = paired_deltas(list(rows_a) + list(rows_b), method_a, method_b)
     rng = np.random.default_rng(BOOT_SEED)
     return bootstrap_ci(deltas, metric, rng)
 
 
-def fig1_primary(rows_joint, rows_seq, out):
+def fig1_primary(
+    rows_joint: list[Record],
+    rows_seq: list[Record],
+    out: Path,
+) -> None:
+    """Write the paired primary-effect figure."""
     fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.2))
     for ax, metric, ylab in (
             (axes[0], "pos_rmse", "Position RMSE (px)"),
@@ -102,7 +118,12 @@ def fig1_primary(rows_joint, rows_seq, out):
     plt.close(fig)
 
 
-def fig2_feedback_dose(feedback, rows_joint, out):
+def fig2_feedback_dose(
+    feedback: list[list[Record]],
+    rows_joint: list[Record],
+    out: Path,
+) -> None:
+    """Write the feedback-iteration dose figure."""
     iters = [1, 2, 5, 10, 25]
     fig, axes = plt.subplots(1, 3, figsize=(12, 3.8))
     for ax, metric, ylab in (
@@ -140,12 +161,20 @@ def fig2_feedback_dose(feedback, rows_joint, out):
     plt.close(fig)
 
 
-def distorted(rows):
+def distorted(rows: list[Record]) -> list[Record]:
+    """Select nonzero-distortion records."""
     return [r for r in rows if abs(r["k1_true"]) > 1e-12]
 
 
-def fig3_prestitch(rows_joint, rows_joint_np, rows_seq, rows_seq_np,
-                   rows_oracle, out):
+def fig3_prestitch(
+    rows_joint: list[Record],
+    rows_joint_np: list[Record],
+    rows_seq: list[Record],
+    rows_seq_np: list[Record],
+    rows_oracle: list[Record],
+    out: Path,
+) -> None:
+    """Write the pre-stitch configuration comparison figure."""
     groups = [
         ("joint", distorted(rows_joint)),
         ("joint_np", distorted(rows_joint_np)),
@@ -174,7 +203,11 @@ def fig3_prestitch(rows_joint, rows_joint_np, rows_seq, rows_seq_np,
     plt.close(fig)
 
 
-def fig4_accuracy_runtime(groups, out):
+def fig4_accuracy_runtime(
+    groups: list[tuple[str, list[Record]]],
+    out: Path,
+) -> None:
+    """Write the accuracy-versus-runtime figure."""
     fig, ax = plt.subplots(figsize=(6.5, 4.6))
     for name, rows in groups:
         rmse = [r.get("pos_rmse") for r in rows if r["status"] == "ok"]
@@ -194,7 +227,12 @@ def fig4_accuracy_runtime(groups, out):
     plt.close(fig)
 
 
-def fig5_signed_k1(rows_joint, rows_seq, out):
+def fig5_signed_k1(
+    rows_joint: list[Record],
+    rows_seq: list[Record],
+    out: Path,
+) -> None:
+    """Write the signed distortion-calibration figure."""
     fig, ax = plt.subplots(figsize=(5.6, 5.0))
     for rows, name in ((rows_joint, "joint"), (rows_seq, "sequential")):
         est = [r.get("k1") for r in rows if r["status"] == "ok"]
@@ -216,11 +254,17 @@ def fig5_signed_k1(rows_joint, rows_seq, out):
     plt.close(fig)
 
 
-def method_rows(results_dir, manifest, method):
+def method_rows(
+    results_dir: Path,
+    manifest: dict[str, Any],
+    method: str,
+) -> list[Record]:
+    """Load only one method's records from a result directory."""
     return [r for r in load_all(results_dir, manifest) if r["method"] == method]
 
 
-def main():
+def main() -> None:
+    """Load completed results and generate all publication figures."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--bench", type=Path, default=Path("benchmark"))
     parser.add_argument("--out", type=Path, default=Path("figures"))

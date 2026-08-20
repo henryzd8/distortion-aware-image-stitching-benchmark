@@ -1,0 +1,143 @@
+{
+ "case": "c1_s2026_k1_m0.0040_noise_10",
+ "method": "sequential_paper_matched",
+ "status": "ok",
+ "k1_true": -0.004,
+ "noise": 10,
+ "ls": 0,
+ "k2_true": 0.0,
+ "device": "cuda",
+ "protocol_version": "2026-08-11-rigorous-v12",
+ "mi_quantization": {
+  "algorithm": "MiniBatchKMeans",
+  "batch_size": 10000,
+  "max_iter": 300,
+  "random_seed": 1000
+ },
+ "warp_backend": "torch_grid_sample_bicubic",
+ "joint_k1_tol": 0.0,
+ "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "pre_stitch_gamma_schedule": "paper_default_16",
+  "k1_bounds": [
+   -0.015,
+   0.015
+  ],
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "final_position_gamma": 1.0
+ },
+ "k1": -0.0009993501012765219,
+ "k1_err": 0.003000649898723478,
+ "k1_signed": 0.003000649898723478,
+ "k1_hist": [
+  -0.0009993501012765219
+ ],
+ "position_history": null,
+ "iterations": 1,
+ "positions": [
+  [
+   7,
+   -8
+  ],
+  [
+   7,
+   859
+  ],
+  [
+   7,
+   1726
+  ],
+  [
+   874,
+   -8
+  ],
+  [
+   874,
+   859
+  ],
+  [
+   874,
+   1726
+  ],
+  [
+   1741,
+   -8
+  ],
+  [
+   1741,
+   859
+  ],
+  [
+   1741,
+   1726
+  ]
+ ],
+ "positions_pre": [
+  [
+   7,
+   -8
+  ],
+  [
+   7,
+   858
+  ],
+  [
+   7,
+   1724
+  ],
+  [
+   873,
+   -8
+  ],
+  [
+   873,
+   858
+  ],
+  [
+   873,
+   1724
+  ],
+  [
+   1739,
+   -8
+  ],
+  [
+   1739,
+   858
+  ],
+  [
+   1740,
+   1724
+  ]
+ ],
+ "selected_start": null,
+ "selection_scores": null,
+ "candidate_k1": null,
+ "candidate_positions": null,
+ "candidate_times_s": null,
+ "final_selection_score": null,
+ "pos_rmse": 5.477225575051661,
+ "pos_mae": 3.0,
+ "pos_max": 6.0,
+ "pre_rmse": 7.187952884282608,
+ "pre_mae": 3.9444444444444446,
+ "at_bound": false,
+ "time_s": 542.58,
+ "distortion_psnr": 54.37386904927732,
+ "distortion_ssim": 0.998623953106713,
+ "distortion_ncc": 0.999759766141841,
+ "distortion_mse": 15687.715423884536,
+ "distortion_valid_fraction": 0.18407228257921007,
+ "distortion_coverage_fraction": 1.0,
+ "psnr": 34.89452018195048,
+ "ssim": 0.9834396465035428,
+ "ncc": 0.9787383809041251,
+ "mse": 1391536.4582580982,
+ "valid_fraction": 0.18407228257921007,
+ "coverage_fraction": 0.9954528289287351,
+ "seam_true": 0.004048639481608267,
+ "seam_est": 0.0013529451736640809
+}

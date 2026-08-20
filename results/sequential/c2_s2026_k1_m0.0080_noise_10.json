@@ -18,7 +18,8 @@
  "joint_k1_tol": 0.0,
  "joint_update_order": "positions_first",
  "method_settings": {
-  "pre_stitch_gamma_schedule": "paper_default_16",
+  "paper_style": true,
+  "pre_stitch_gamma_schedule": "default",
   "k1_bounds": [
    -0.015,
    0.015

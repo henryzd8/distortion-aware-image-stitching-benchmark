@@ -1,5 +1,7 @@
-# Resumable batch runner for the final benchmark.
-# These limits also apply when worker processes import this module.
+"""Resumable batch runner for primary and ablation experiments."""
+
+from __future__ import annotations
+
 import os
 
 os.environ.setdefault("OMP_NUM_THREADS", "4")
@@ -10,14 +12,16 @@ import json
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import tifffile
 
-_G = {}
+_G: dict[str, Any] = {}
 
 
-def check_manifest(bench, manifest):
+def check_manifest(bench: Path, manifest: dict[str, Any]) -> None:
+    """Validate manifest paths, case identities, and crop references."""
     cases = manifest.get("cases", [])
     crops = manifest.get("crops", [])
     if manifest.get("case_count") != len(cases):
@@ -44,14 +48,22 @@ def check_manifest(bench, manifest):
             raise FileNotFoundError(path)
 
 
-def joint_order(method, requested_order):
+def joint_order(method: str, requested_order: str) -> str:
+    """Return the effective update order for a requested method."""
     if method in ("joint_matched_no_prestitch", "joint_stabilized"):
         return "distortion_first"
     return requested_order
 
 
-def run_config(protocol_version, local_search, joint_k1_tol,
-               joint_update_order, device, warp_backend, mi_quantization):
+def run_config(
+    protocol_version: str | None,
+    local_search: int,
+    joint_k1_tol: float,
+    joint_update_order: str | None,
+    device: str | None,
+    warp_backend: str | None,
+    mi_quantization: dict[str, Any] | None,
+) -> tuple[Any, ...]:
     """Return the provenance fields that must match before a result is reused."""
     return (
         protocol_version, int(local_search), float(joint_k1_tol),
@@ -60,7 +72,14 @@ def run_config(protocol_version, local_search, joint_k1_tol,
     )
 
 
-def _init(bench, out, local_search, joint_k1_tol, joint_update_order, device):
+def _init(
+    bench: str,
+    out: str,
+    local_search: int,
+    joint_k1_tol: float,
+    joint_update_order: str,
+    device: str,
+) -> None:
     import run_final_experiment as rfe
 
     bench = Path(bench)
@@ -79,7 +98,8 @@ def _init(bench, out, local_search, joint_k1_tol, joint_update_order, device):
     }
 
 
-def _task(task):
+def _task(task: tuple[str, str]) -> tuple[str, str]:
+    """Execute one case-method task and persist a failure record if needed."""
     # Record a corrupt case without losing the rest of the batch. Failed
     # records are retried on the next run.
     case, method = task
@@ -112,7 +132,8 @@ def _task(task):
     return case, method
 
 
-def main():
+def main() -> None:
+    """Parse runner options, validate provenance, and execute pending tasks."""
     import run_final_experiment as rfe
 
     ap = argparse.ArgumentParser()

@@ -1,8 +1,7 @@
-# Method implementations and per-case measurements for the benchmark.
-#
-#   python run_final_experiment.py --bench benchmark --out results
-#
-# Set thread caps before importing numpy or torch.
+"""Implement benchmark methods and compute per-case measurements."""
+
+from __future__ import annotations
+
 import os
 
 os.environ.setdefault("OMP_NUM_THREADS", "4")
@@ -13,6 +12,7 @@ from contextlib import nullcontext
 import json
 import time
 from pathlib import Path
+from typing import Any, Sequence
 
 import numpy as np
 import tifffile
@@ -66,6 +66,7 @@ EXPLORATORY_METHODS = (
     "dcs_paper_iter_10", "dcs_paper_no_prestitch",
     "sequential_paper_no_prestitch", "sequential_paper_bound_010",
     "sequential_paper_bound_020", "oracle_k1_paper",
+    "dcs_paper_joint_oracle",
 )
 METHODS = PRIMARY_METHODS + EXPLORATORY_METHODS
 
@@ -84,10 +85,14 @@ PAPER_DCS_METHODS = {"dcs_paper_style", "dcs_paper_no_prestitch"} \
 PAPER_SEQUENTIAL_METHODS = {"sequential_paper_matched",
                             "sequential_paper_no_prestitch"} \
     | set(PAPER_SEQUENTIAL_SENSITIVITY_BOUNDS)
+Record = dict[str, Any]
 
 
-def pos_stats(hat, true):
-    # gauge-free position errors relative to tile 0
+def pos_stats(
+    hat: np.ndarray,
+    true: np.ndarray,
+) -> tuple[float, float, float]:
+    """Return translation-gauge-free RMSE, MAE, and maximum position error."""
     e = (hat - hat[0]).astype(float) - (true - true[0]).astype(float)
     rmse = float(np.sqrt(np.mean(np.sum(e ** 2, axis=1))))
     mae = float(np.mean(np.abs(e)))
@@ -95,19 +100,26 @@ def pos_stats(hat, true):
     return rmse, mae, mx
 
 
-def at_bound(k1_increments, bounds=K1_BOUNDS, gamma=1.0):
+def at_bound(
+    k1_increments: Sequence[float] | np.ndarray,
+    bounds: tuple[float, float] = K1_BOUNDS,
+    gamma: float = 1.0,
+) -> bool:
+    """Report whether any applied increment is near its configured bound."""
     lo, hi = (gamma * bounds[0], gamma * bounds[1])
     tol = 0.01 * (hi - lo)
     return bool(any(v <= lo + tol or v >= hi - tol for v in k1_increments))
 
 
-def method_settings(method):
+def method_settings(method: str) -> dict[str, Any] | None:
+    """Return serializable provenance settings for one method name."""
     if method in PAPER_DCS_METHODS:
         return {
             "paper_style": True,
             "n_iterations": PAPER_ITERATION_COUNTS.get(method, N_ITERATIONS),
             "pre_stitch_gamma_schedule": (
-                "none" if method != "dcs_paper_no_prestitch" else "disabled"),
+                "default" if method != "dcs_paper_no_prestitch"
+                else "disabled"),
             "k1_bounds": list(PAPER_K1_BOUNDS),
             "k1_update_gamma": GAMMA,
             "boundary_px": PAPER_BOUNDARY_PX,
@@ -120,7 +132,7 @@ def method_settings(method):
         return {
             "paper_style": True,
             "pre_stitch_gamma_schedule": (
-                "paper_default_16" if method != "sequential_paper_no_prestitch"
+                "default" if method != "sequential_paper_no_prestitch"
                 else "disabled"),
             "k1_bounds": list(PAPER_SEQUENTIAL_SENSITIVITY_BOUNDS.get(
                 method, PAPER_SEQUENTIAL_K1_BOUNDS)),
@@ -132,17 +144,32 @@ def method_settings(method):
     if method == "oracle_k1_paper":
         return {
             "paper_style": True,
-            "pre_stitch_gamma_schedule": "paper_default_16",
+            "pre_stitch_gamma_schedule": "default",
             "k1_source": "synthetic_ground_truth",
             "boundary_px": PAPER_BOUNDARY_PX,
             "local_search": 0,
             "skip_diagonal": False,
             "final_position_gamma": 1.0,
         }
+    if method == "dcs_paper_joint_oracle":
+        return {
+            "paper_style": True,
+            "n_iterations": N_ITERATIONS,
+            "pre_stitch_gamma_schedule": "default",
+            "k1_source": "synthetic_ground_truth",
+            "k1_bounds": list(PAPER_K1_BOUNDS),
+            "k1_update_gamma": GAMMA,
+            "boundary_px": PAPER_BOUNDARY_PX,
+            "local_search": 0,
+            "skip_diagonal": False,
+            "update_order": "positions_first",
+            "correction_mode": "incremental",
+        }
     return None
 
 
-def resolve_device(requested):
+def resolve_device(requested: str) -> str:
+    """Resolve a requested CPU/CUDA device and fail clearly when unavailable."""
     if requested == "cpu":
         return "cpu"
     try:
@@ -155,23 +182,37 @@ def resolve_device(requested):
     return "cuda" if cuda_ok and requested in ("auto", "cuda") else "cpu"
 
 
-def _gpu_context(device):
+def _gpu_context(device: str) -> Any:
+    """Return the shared GPU primitive-patching context when requested."""
     if device != "cuda":
         return nullcontext()
     from distortcorrect_stitcher_gpu import _gpu_backend
     return _gpu_backend()
 
 
-def _correct_raw_tiles(tiles, k1, device):
+def _correct_raw_tiles(
+    tiles: np.ndarray,
+    k1: float,
+    device: str,
+) -> np.ndarray:
+    """Correct raw tiles with the selected CPU or CUDA warp backend."""
     if device == "cuda":
         from distortcorrect_stitcher_gpu import undistort_tiles_gpu
         return undistort_tiles_gpu(tiles, [k1], order=INTERP_ORDER)
     return undistort_tiles(tiles, [k1], order=INTERP_ORDER)
 
 
-def run_joint_matched(tiles, p_ini, pre_stitch_on, ls, k1_tol=K1_TOL,
-                      update_order="positions_first", device="cpu",
-                      gamma=GAMMA):
+def run_joint_matched(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    pre_stitch_on: bool,
+    ls: int,
+    k1_tol: float = K1_TOL,
+    update_order: str = "positions_first",
+    device: str = "cpu",
+    gamma: float = GAMMA,
+) -> Record:
+    """Run the matched iterative joint pipeline."""
     stitcher_cls = (DistortCorrectStitcherGPU if device == "cuda"
                     else DistortCorrectStitcher)
     st = stitcher_cls(
@@ -201,15 +242,26 @@ def run_joint_matched(tiles, p_ini, pre_stitch_on, ls, k1_tol=K1_TOL,
     }
 
 
-def run_joint_stabilized(tiles, p_ini, device="cpu"):
+def run_joint_stabilized(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    device: str = "cpu",
+) -> Record:
+    """Run the exploratory distortion-first stabilized joint variant."""
     return run_joint_matched(
         tiles, p_ini, pre_stitch_on=False, ls=0,
         k1_tol=STABILIZED_JOINT_K1_TOL,
         update_order="distortion_first", device=device, gamma=1.0)
 
 
-def run_dcs_paper_style(tiles, p_ini, device="cpu",
-                        n_iterations=N_ITERATIONS, pre_stitch=True):
+def run_dcs_paper_style(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    device: str = "cpu",
+    n_iterations: int = N_ITERATIONS,
+    pre_stitch: bool = True,
+) -> Record:
+    """Run the paper-style joint schedule used in the primary comparison."""
     stitcher_cls = (DistortCorrectStitcherGPU if device == "cuda"
                     else DistortCorrectStitcher)
     st = stitcher_cls(
@@ -239,7 +291,14 @@ def run_dcs_paper_style(tiles, p_ini, device="cpu",
     }
 
 
-def run_sequential_matched(tiles, p_ini, pre_stitch_on, ls, device="cpu"):
+def run_sequential_matched(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    pre_stitch_on: bool,
+    ls: int,
+    device: str = "cpu",
+) -> Record:
+    """Run the non-paper matched sequential baseline."""
     t0 = time.time()
     if pre_stitch_on:
         tiles_proc = sharpen_tiles(tiles)
@@ -267,9 +326,14 @@ def run_sequential_matched(tiles, p_ini, pre_stitch_on, ls, device="cpu"):
     }
 
 
-def run_sequential_paper_matched(tiles, p_ini, device="cpu",
-                                 k1_bounds=PAPER_SEQUENTIAL_K1_BOUNDS,
-                                 pre_stitch=True):
+def run_sequential_paper_matched(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    device: str = "cpu",
+    k1_bounds: tuple[float, float] = PAPER_SEQUENTIAL_K1_BOUNDS,
+    pre_stitch: bool = True,
+) -> Record:
+    """Run the paper-matched one-shot sequential pipeline."""
     t0 = time.time()
     tiles_proc = sharpen_tiles(tiles)
     if pre_stitch:
@@ -297,7 +361,13 @@ def run_sequential_paper_matched(tiles, p_ini, device="cpu",
     }
 
 
-def run_oracle_k1_paper(tiles, p_ini, k1_true, device="cpu"):
+def run_oracle_k1_paper(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    k1_true: float,
+    device: str = "cpu",
+) -> Record:
+    """Run the sequential diagnostic with the synthetic coefficient supplied."""
     t0 = time.time()
     tiles_proc = sharpen_tiles(tiles)
     with _gpu_context(device):
@@ -319,7 +389,49 @@ def run_oracle_k1_paper(tiles, p_ini, k1_true, device="cpu"):
     }
 
 
-def _select_multistart_candidate(candidates, scores):
+def run_dcs_paper_joint_oracle(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    k1_true: float,
+    device: str = "cpu",
+) -> Record:
+    """Run the joint schedule with the synthetic coefficient supplied."""
+    # Diagnostic control for the joint pipeline: same paper-style schedule
+    # and 25 feedback iterations, but the per-iteration k1 increment is the
+    # exact residual to the injected true coefficient instead of an estimate.
+    stitcher_cls = (DistortCorrectStitcherGPU if device == "cuda"
+                    else DistortCorrectStitcher)
+    st = stitcher_cls(
+        k1_bounds=PAPER_K1_BOUNDS, gamma=GAMMA, n_iterations=N_ITERATIONS,
+        k1_tol=0.0, interpolation_order=INTERP_ORDER,
+        pre_stitch_gamma_schedule=None, ncc_threshold=0.0, sharpen=False,
+        boundary_frac=BOUNDARY_FRAC, boundary_px=PAPER_BOUNDARY_PX,
+        position_damping=1.0, local_search=0,
+        update_order="positions_first", correction_mode="incremental",
+        skip_diagonal=False, oracle_k1=k1_true,
+    )
+    t0 = time.time()
+    res = st.run(tiles, p_ini, do_sharpen=True, verbose=False)
+    dt = time.time() - t0
+    hist = np.asarray(res.k1_history)
+    k1 = float(np.sum(hist[:, 0])) if hist.ndim == 2 else float(np.sum(hist))
+    return {
+        "k1": k1,
+        "k1_hist": [float(x[0]) for x in hist],
+        "position_history": [np.asarray(p).tolist() for p in res.position_history]
+        if res.position_history else None,
+        "iterations": int(res.iterations_used),
+        "positions": np.asarray(res.positions).tolist(),
+        "positions_pre": np.asarray(res.positions_pre).tolist(),
+        "time_s": dt,
+    }
+
+
+def _select_multistart_candidate(
+    candidates: dict[str, Record],
+    scores: dict[str, float],
+) -> str:
+    """Select the finite candidate with the lowest seam score."""
     if not candidates or set(candidates) != set(scores):
         raise ValueError("candidate and score names must form the same nonempty set")
     finite = [(float(scores[name]), name) for name in candidates
@@ -330,7 +442,13 @@ def _select_multistart_candidate(candidates, scores):
     return selected
 
 
-def run_adaptive_multistart(tiles, p_ini, ls, device="cpu"):
+def run_adaptive_multistart(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    ls: int,
+    device: str = "cpu",
+) -> Record:
+    """Evaluate stage-first and pre-stitch-first sequential starts."""
     t0 = time.time()
     candidates = {
         "stage_first": run_sequential_matched(
@@ -368,7 +486,14 @@ def run_adaptive_multistart(tiles, p_ini, ls, device="cpu"):
     return result
 
 
-def run_gt_k1_control(tiles, p_ini, k1_true, ls, device="cpu"):
+def run_gt_k1_control(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    k1_true: float,
+    ls: int,
+    device: str = "cpu",
+) -> Record:
+    """Correct at the true coefficient before solving positions."""
     # control: correct at the true k1, then stitch
     t0 = time.time()
     tiles_proc = sharpen_tiles(tiles)
@@ -388,7 +513,14 @@ def run_gt_k1_control(tiles, p_ini, k1_true, ls, device="cpu"):
     }
 
 
-def run_gt_position_control(tiles, p_ini, p_true, ls, device="cpu"):
+def run_gt_position_control(
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    p_true: np.ndarray,
+    ls: int,
+    device: str = "cpu",
+) -> Record:
+    """Estimate distortion at true positions before the final position solve."""
     # control: estimate k1 at the true positions, then correct + stitch
     # from the real initial positions
     t0 = time.time()
@@ -412,8 +544,18 @@ def run_gt_position_control(tiles, p_ini, p_true, ls, device="cpu"):
     }
 
 
-def run_method(method, tiles, p_ini, p_true, k1_true, ls, k1_tol,
-               update_order, device):
+def run_method(
+    method: str,
+    tiles: np.ndarray,
+    p_ini: np.ndarray,
+    p_true: np.ndarray,
+    k1_true: float,
+    ls: int,
+    k1_tol: float,
+    update_order: str,
+    device: str,
+) -> Record:
+    """Dispatch one method name to its implementation."""
     if method == "dcs_paper_style":
         return run_dcs_paper_style(tiles, p_ini, device=device)
     if method in PAPER_ITERATION_COUNTS:
@@ -439,6 +581,8 @@ def run_method(method, tiles, p_ini, p_true, k1_true, ls, k1_tol,
             k1_bounds=PAPER_SEQUENTIAL_SENSITIVITY_BOUNDS[method])
     if method == "oracle_k1_paper":
         return run_oracle_k1_paper(tiles, p_ini, k1_true, device=device)
+    if method == "dcs_paper_joint_oracle":
+        return run_dcs_paper_joint_oracle(tiles, p_ini, k1_true, device=device)
     if method == "adaptive_multistart":
         return run_adaptive_multistart(tiles, p_ini, ls, device=device)
     if method == "joint_stabilized":
@@ -456,9 +600,18 @@ def run_method(method, tiles, p_ini, p_true, k1_true, ls, k1_tol,
     raise ValueError(f"unknown method: {method}")
 
 
-def process_case(bench, meta, source_crops, out_dir, methods,
-                 local_search=LOCAL_SEARCH, joint_k1_tol=K1_TOL,
-                 joint_update_order="positions_first", device="auto"):
+def process_case(
+    bench: Path,
+    meta: dict[str, Any],
+    source_crops: dict[int, np.ndarray],
+    out_dir: Path,
+    methods: Sequence[str],
+    local_search: int = LOCAL_SEARCH,
+    joint_k1_tol: float = K1_TOL,
+    joint_update_order: str = "positions_first",
+    device: str = "auto",
+) -> None:
+    """Run selected methods, calculate metrics, and write JSON records."""
     device = resolve_device(device)
     case = meta["case"]
     d = np.load(bench / "cases" / f"{case}.npz")
@@ -526,7 +679,8 @@ def process_case(bench, meta, source_crops, out_dir, methods,
                 search_bounds = PAPER_SEQUENTIAL_SENSITIVITY_BOUNDS.get(
                     method, PAPER_SEQUENTIAL_K1_BOUNDS)
                 search_gamma = 1.0
-            elif method in ("gt_k1_control", "oracle_k1_paper"):
+            elif method in ("gt_k1_control", "oracle_k1_paper",
+                            "dcs_paper_joint_oracle"):
                 search_bounds, search_gamma = None, None
             elif method in ("joint_matched", "joint_matched_no_prestitch"):
                 search_bounds, search_gamma = K1_BOUNDS, GAMMA
@@ -582,7 +736,8 @@ def process_case(bench, meta, source_crops, out_dir, methods,
         print(f"{case} {method}: {rec['status']}", flush=True)
 
 
-def main():
+def main() -> None:
+    """Parse CLI options and process the selected benchmark cases."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--bench", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)

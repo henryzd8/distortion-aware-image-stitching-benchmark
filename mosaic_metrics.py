@@ -1,5 +1,8 @@
-# Mosaic-quality metrics: PSNR/SSIM/NCC against the source crop plus a
-# seam self-consistency error, on valid (tile-covered) pixels only.
+"""Full-reference mosaic and seam metrics for the benchmark."""
+
+from __future__ import annotations
+
+from typing import Sequence
 
 import numpy as np
 from skimage.metrics import structural_similarity
@@ -9,9 +12,12 @@ from distortcorrect_stitcher_gpu import find_overlap_coords
 DATA_RANGE = 65535.0  # uint16 tiles
 
 
-def assemble_exact(tiles, positions, border=64):
-    # paste tiles at integer positions, averaging overlaps; returns the
-    # mosaic (float64) and a valid-pixel mask (single-channel tiles only)
+def assemble_exact(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    border: int = 64,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Paste tiles in their local coordinate frame and average overlaps."""
     tiles = np.asarray(tiles)
     if tiles.ndim != 3:
         raise ValueError("assemble_exact expects single-channel tiles (t, y, x)")
@@ -36,8 +42,13 @@ def assemble_exact(tiles, positions, border=64):
     return canvas, valid
 
 
-def assemble_on_reference(tiles, positions, output_shape, border=64):
-    # Keep the source coordinate frame; clip pixels outside it.
+def assemble_on_reference(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    output_shape: Sequence[int],
+    border: int = 64,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Paste tiles into a fixed source frame and return coverage."""
     tiles = np.asarray(tiles)
     if tiles.ndim != 3:
         raise ValueError("assemble_on_reference expects (tile, y, x) data")
@@ -62,8 +73,13 @@ def assemble_on_reference(tiles, positions, output_shape, border=64):
     return canvas, valid
 
 
-def _masked_ssim(gt, mosaic, valid, data_range):
-    # SSIM averaged over windows that lie fully inside the valid region
+def _masked_ssim(
+    gt: np.ndarray,
+    mosaic: np.ndarray,
+    valid: np.ndarray,
+    data_range: float,
+) -> float:
+    """Average SSIM over windows fully contained in the valid mask."""
     from scipy.ndimage import uniform_filter
 
     ssim_map = structural_similarity(
@@ -76,10 +92,14 @@ def _masked_ssim(gt, mosaic, valid, data_range):
     return float(np.mean(ssim_map[ok]))
 
 
-def metrics_vs_source(tiles_corrected, positions, source_crop, border=64,
-                      evaluation_positions=None):
-    # Full-reference metrics in the source coordinate system.  Callers are
-    # responsible for removing the global translation gauge from positions.
+def metrics_vs_source(
+    tiles_corrected: np.ndarray,
+    positions: np.ndarray,
+    source_crop: np.ndarray,
+    border: int = 64,
+    evaluation_positions: np.ndarray | None = None,
+) -> dict[str, float]:
+    """Calculate image-quality metrics against a source crop."""
     tiles_corrected = np.asarray(tiles_corrected)
     src = np.asarray(source_crop)
     mosaic, covered = assemble_on_reference(
@@ -120,9 +140,13 @@ def metrics_vs_source(tiles_corrected, positions, source_crop, border=64,
             "coverage_fraction": coverage_fraction}
 
 
-def seam_error(tiles, positions, border=64, adjacent_only=True):
-    # mean absolute intensity difference over each adjacent-pair overlap,
-    # border-trimmed and normalized to [0, 1] (single-channel tiles)
+def seam_error(
+    tiles: np.ndarray,
+    positions: np.ndarray,
+    border: int = 64,
+    adjacent_only: bool = True,
+) -> float:
+    """Measure normalized absolute intensity mismatch across tile seams."""
     tiles = np.asarray(tiles)
     if tiles.ndim != 3:
         raise ValueError("seam_error expects single-channel tiles (t, y, x)")

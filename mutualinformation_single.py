@@ -1,20 +1,41 @@
+"""GPU mutual-information alignment adapted from Öfverstedt (2021)."""
+
+from __future__ import annotations
+
+from typing import Any, Callable, Sequence
+
+import numpy as np
+import torch
+import torch.nn.functional as F
+
 # Adapted from code originally authored by Johan Öfverstedt (2021), MIT License.
 # Modified by Hu Cang (2024).
 
-import torch
-import numpy as np
-import torch.nn.functional as F
-
 VALUE_TYPE = torch.float32
 
-def compute_entropy(C, N, eps=1e-7):
+
+def compute_entropy(
+    C: torch.Tensor,
+    N: torch.Tensor,
+    eps: float = 1e-7,
+) -> torch.Tensor:
+    """Compute the negative entropy contribution for quantized counts."""
     p = C / N
     return p * torch.log2(torch.clamp(p, min=eps))
 
-def float_compare(A, c):
+
+def float_compare(A: torch.Tensor, c: int) -> torch.Tensor:
+    """Build a soft level-set mask for one quantization value."""
     return torch.clamp(1 - torch.abs(A - c), 0.0)
 
-def fft_of_levelsets(A, Q, packing, setup_fn):
+
+def fft_of_levelsets(
+    A: torch.Tensor,
+    Q: int,
+    packing: int,
+    setup_fn: Callable[[torch.Tensor], Any],
+) -> list[tuple[Any, int, int]]:
+    """Batch level-set FFTs to limit temporary GPU memory use."""
     fft_list = []
     for a_start in range(0, Q, packing):
         a_end = min(a_start + packing, Q)
@@ -28,27 +49,43 @@ def fft_of_levelsets(A, Q, packing, setup_fn):
         fft_list.append((ffts, a_start, a_end))
     return fft_list
 
-def fft(A):
+def fft(A: torch.Tensor) -> torch.Tensor:
+    """Return the two-dimensional real FFT of a tensor."""
     spectrum = torch.fft.rfft2(A)
     return spectrum
 
-def ifft(Afft):
+
+def ifft(Afft: torch.Tensor) -> torch.Tensor:
+    """Return the inverse two-dimensional real FFT."""
     res = torch.fft.irfft2(Afft)
     return res
 
-def fftconv(A, B):
+
+def fftconv(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
+    """Multiply Fourier-domain tensors for circular convolution."""
     C = A * B
     return C
 
-def corr_target_setup(A):
+
+def corr_target_setup(A: torch.Tensor) -> torch.Tensor:
+    """Prepare a target tensor for Fourier-domain correlation."""
     B = fft(A)
     return B
 
-def corr_template_setup(B):
+
+def corr_template_setup(B: torch.Tensor) -> torch.Tensor:
+    """Prepare a template tensor using the conjugate Fourier spectrum."""
     B_FFT = torch.conj(fft(B))
     return B_FFT
 
-def corr_apply(A, B, sz, do_rounding=True):
+
+def corr_apply(
+    A: torch.Tensor,
+    B: torch.Tensor,
+    sz: Sequence[int],
+    do_rounding: bool = True,
+) -> torch.Tensor:
+    """Apply Fourier correlation and crop it to the valid shape."""
     C = fftconv(A, B)
     C = ifft(C)
     C = C[:sz[0], :sz[1], :sz[2], :sz[3]]
@@ -56,7 +93,12 @@ def corr_apply(A, B, sz, do_rounding=True):
         C = torch.round(C)
     return C
 
-def create_float_tensor(shape, on_gpu, fill_value=None):
+def create_float_tensor(
+    shape: Sequence[int],
+    on_gpu: bool,
+    fill_value: float | None = None,
+) -> torch.Tensor:
+    """Create a float tensor on CPU or the active CUDA device."""
     if on_gpu:
         # Equivalent to the legacy torch.cuda.FloatTensor constructor, without
         # its deprecation warning on current PyTorch releases.
@@ -71,7 +113,8 @@ def create_float_tensor(shape, on_gpu, fill_value=None):
             res = np.zeros((shape[0], shape[1], shape[2], shape[3]), dtype='float32')
         return torch.tensor(res, dtype=torch.float32)
 
-def to_tensor(A, on_gpu=True):
+def to_tensor(A: Any, on_gpu: bool = True) -> torch.Tensor:
+    """Convert an array-like input to the four-dimensional tensor layout."""
     if torch.is_tensor(A):
         A_tensor = A.cuda(non_blocking=True) if on_gpu else A
         if A_tensor.ndim == 2:
@@ -82,7 +125,20 @@ def to_tensor(A, on_gpu=True):
     else:
         return to_tensor(torch.tensor(A, dtype=VALUE_TYPE), on_gpu=on_gpu)
 
-def align_translation(A, B, M_A, M_B, Q_A, Q_B, overlap=0.5, enable_partial_overlap=True, normalize_mi=False, on_gpu=True, save_maps=False):
+def align_translation(
+    A: Any,
+    B: Any,
+    M_A: Any,
+    M_B: Any,
+    Q_A: int,
+    Q_B: int,
+    overlap: float = 0.5,
+    enable_partial_overlap: bool = True,
+    normalize_mi: bool = False,
+    on_gpu: bool = True,
+    save_maps: bool = False,
+) -> tuple[tuple[float, int, int], list[np.ndarray] | None]:
+    """Estimate translation by maximizing quantized mutual information."""
     eps = 1e-7
     maps = []
 
@@ -222,7 +278,16 @@ def align_translation(A, B, M_A, M_B, Q_A, Q_B, overlap=0.5, enable_partial_over
         return result, None
 
 from sklearn.cluster import MiniBatchKMeans
-def image2cat_kmeans(I, k, batch_size=100, max_iter=1000, random_seed=1000):
+
+
+def image2cat_kmeans(
+    I: np.ndarray,
+    k: int,
+    batch_size: int = 100,
+    max_iter: int = 1000,
+    random_seed: int = 1000,
+) -> np.ndarray:
+    """Quantize a grayscale image into integer MiniBatchKMeans labels."""
     total_shape = I.shape
     spatial_shape = total_shape
     channels = 1

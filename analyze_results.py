@@ -1,10 +1,13 @@
-# Summarize completed benchmark results and paired method differences.
+"""Validate, summarize, and compare completed benchmark result records."""
+
+from __future__ import annotations
 
 import argparse
 from collections import Counter
 import csv
 import json
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
@@ -54,9 +57,11 @@ COMPARISONS = {
 
 N_BOOT = 10000
 SEED = 0
+Record = dict[str, Any]
 
 
-def load_all(results_dir, manifest):
+def load_all(results_dir: Path, manifest: dict[str, Any]) -> list[Record]:
+    """Load JSON records and attach condition metadata from a manifest."""
     cases = {}
     for meta in manifest["cases"]:
         cases[meta["case"]] = meta
@@ -75,7 +80,8 @@ def load_all(results_dir, manifest):
     return rows
 
 
-def check_results(rows):
+def check_results(rows: list[Record]) -> None:
+    """Reject mixed or missing result provenance."""
     protocols = {r.get("protocol_version") for r in rows}
     quantizers = {json.dumps(r.get("mi_quantization"), sort_keys=True)
                   for r in rows}
@@ -91,7 +97,13 @@ def check_results(rows):
         raise RuntimeError("one or more results are missing provenance fields")
 
 
-def check_complete(rows, manifest, methods, allow_incomplete=False):
+def check_complete(
+    rows: list[Record],
+    manifest: dict[str, Any],
+    methods: tuple[str, ...] | list[str],
+    allow_incomplete: bool = False,
+) -> list[tuple[str, str]]:
+    """Check the expected case-method Cartesian product."""
     expected = {(c["case"], m) for c in manifest["cases"] for m in methods}
     found = [(r["case"], r["method"]) for r in rows]
     duplicates = sorted(pair for pair, count in Counter(found).items()
@@ -113,7 +125,12 @@ def check_complete(rows, manifest, methods, allow_incomplete=False):
     return missing
 
 
-def paired_deltas(rows, method_a, method_b):
+def paired_deltas(
+    rows: list[Record],
+    method_a: str,
+    method_b: str,
+) -> dict[str, Record]:
+    """Return per-case metric differences for two paired methods."""
     by_case = {}
     for r in rows:
         if r["status"] != "ok":
@@ -144,7 +161,13 @@ def paired_deltas(rows, method_a, method_b):
     return deltas
 
 
-def bootstrap_ci(deltas, metric, rng, n_boot=N_BOOT):
+def bootstrap_ci(
+    deltas: dict[str, Record],
+    metric: str,
+    rng: np.random.Generator,
+    n_boot: int = N_BOOT,
+) -> tuple[float, float, float]:
+    """Compute a median and content-block percentile bootstrap interval."""
     # Content-block bootstrap: simulated stage-noise seeds are repeated
     # measurements nested within a crop, not independent microscopy content.
     cases = [c for c in deltas
@@ -168,7 +191,11 @@ def bootstrap_ci(deltas, metric, rng, n_boot=N_BOOT):
     return (med, float(lo), float(hi))
 
 
-def failure_counts(rows, methods):
+def failure_counts(
+    rows: list[Record],
+    methods: tuple[str, ...] | list[str],
+) -> dict[str, tuple[int, int]]:
+    """Count failed and total records for each requested method."""
     out = {}
     for m in methods:
         rs = [r for r in rows if r["method"] == m]
@@ -176,7 +203,8 @@ def failure_counts(rows, methods):
     return out
 
 
-def main():
+def main() -> None:
+    """Run validation, summaries, paired statistics, and optional plots."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--bench", type=Path, required=True)
     parser.add_argument("--results", type=Path, required=True)

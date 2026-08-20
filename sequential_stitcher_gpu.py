@@ -1,8 +1,9 @@
-# Sequential baseline: estimate k1 once, correct once, then stitch.
-# Uses the same primitives as the joint method; the only difference is
-# that the loop is run a single time with no feedback.
+"""One-shot sequential distortion-estimation and stitching pipelines."""
+
+from __future__ import annotations
 
 from collections import namedtuple
+from typing import Any, Sequence
 
 import numpy as np
 
@@ -25,10 +26,21 @@ SequentialResult = namedtuple(
 
 
 class SequentialStitcher:
-    def __init__(self, k1_bounds=(-0.015, 0.015), interpolation_order=3,
-                 gamma_schedule=None, ncc_threshold=0.0, sharpen=False,
-                 boundary_frac=0.25, boundary_px=None, local_search=5, border=64,
-                 skip_diagonal=True):
+    """Estimate distortion once, correct tiles once, and solve positions."""
+
+    def __init__(
+        self,
+        k1_bounds: tuple[float, float] = (-0.015, 0.015),
+        interpolation_order: int = 3,
+        gamma_schedule: Sequence[float] | None = None,
+        ncc_threshold: float = 0.0,
+        sharpen: bool = False,
+        boundary_frac: float = 0.25,
+        boundary_px: int | None = None,
+        local_search: int = 5,
+        border: int = 64,
+        skip_diagonal: bool = True,
+    ) -> None:
         self.k1_bounds = k1_bounds
         self.order = interpolation_order
         self.gamma_schedule = gamma_schedule
@@ -40,7 +52,13 @@ class SequentialStitcher:
         self.border = border
         self.skip_diagonal = skip_diagonal
 
-    def estimate_k1(self, tiles, positions, outlier_tiles=None):
+    def estimate_k1(
+        self,
+        tiles: np.ndarray,
+        positions: np.ndarray,
+        outlier_tiles: Sequence[int] | None = None,
+    ) -> np.ndarray:
+        """Estimate the distortion coefficient from the supplied layout."""
         return estimate_k1_once(
             tiles,
             positions,
@@ -53,8 +71,15 @@ class SequentialStitcher:
             skip_diagonal=self.skip_diagonal,
         )
 
-    def run(self, tiles, positions_ini, outlier_tiles=None,
-            do_sharpen=True, verbose=False):
+    def run(
+        self,
+        tiles: np.ndarray,
+        positions_ini: np.ndarray,
+        outlier_tiles: Sequence[int] | None = None,
+        do_sharpen: bool = True,
+        verbose: bool = False,
+    ) -> SequentialResult:
+        """Run the one-shot estimate--correct--stitch pipeline."""
         tiles_proc = np.asarray(tiles).copy()
         if tiles_proc.ndim not in (3, 4):
             raise ValueError("tiles must have shape (t, y, x) or (t, c, y, x)")
@@ -96,12 +121,22 @@ class SequentialStitcher:
 
 
 class SequentialStitcherGPU(SequentialStitcher):
-    def __init__(self, *args, device=None, **kwargs):
+    """CUDA-backed sequential stitcher using the shared GPU primitives."""
+
+    def __init__(self, *args: Any, device: str | None = None,
+                 **kwargs: Any) -> None:
         self.device = str(_require_cuda(device))
         super().__init__(*args, **kwargs)
 
-    def run(self, tiles, positions_ini, outlier_tiles=None,
-            do_sharpen=True, verbose=False):
+    def run(
+        self,
+        tiles: np.ndarray,
+        positions_ini: np.ndarray,
+        outlier_tiles: Sequence[int] | None = None,
+        do_sharpen: bool = True,
+        verbose: bool = False,
+    ) -> SequentialResult:
+        """Run the sequential pipeline inside the CUDA backend context."""
         with _gpu_backend(self.device):
             return super().run(
                 tiles,

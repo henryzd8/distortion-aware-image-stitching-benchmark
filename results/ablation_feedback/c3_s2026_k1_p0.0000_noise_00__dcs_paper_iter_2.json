@@ -20,7 +20,7 @@
  "method_settings": {
   "paper_style": true,
   "n_iterations": 2,
-  "pre_stitch_gamma_schedule": "none",
+  "pre_stitch_gamma_schedule": "default",
   "k1_bounds": [
    -0.005,
    0.005

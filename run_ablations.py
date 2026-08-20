@@ -1,16 +1,13 @@
-# Reproduce the four ablation runs from the completed result directories.
-#
-#   python run_ablations.py --bench benchmark --device cuda
-#
-# Each ablation writes into its own results/ablation_* directory and is
-# resumable through run_experiments.py.  The search and oracle ablations
-# run only on the 24 nonzero-distortion cases.
+"""Launch the completed standard ablation runs."""
+
+from __future__ import annotations
 
 import argparse
 import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 FEEDBACK_METHODS = [
     "dcs_paper_iter_1", "dcs_paper_iter_2",
@@ -23,18 +20,31 @@ SEARCH_METHODS = [
     "sequential_paper_bound_010", "sequential_paper_bound_020",
 ]
 ORACLE_METHODS = ["oracle_k1_paper"]
+JOINT_ORACLE_METHODS = ["dcs_paper_joint_oracle"]
 
 
-def distorted_cases(manifest):
-    return ",".join(c["case"] for c in manifest["cases"]
-                    if abs(c["k1_true"]) > 1e-12)
+def distorted_cases(manifest: dict[str, Any]) -> str:
+    """Return the comma-separated nonzero-distortion case names."""
+    return ",".join(
+        c["case"] for c in manifest["cases"]
+        if abs(c["k1_true"]) > 1e-12
+    )
 
 
-def all_cases(manifest):
+def all_cases(manifest: dict[str, Any]) -> str:
+    """Return all manifest case names as a runner argument."""
     return ",".join(c["case"] for c in manifest["cases"])
 
 
-def run(python, bench, out, methods, cases, device):
+def run(
+    python: str,
+    bench: Path,
+    out: Path,
+    methods: list[str],
+    cases: str,
+    device: str,
+) -> None:
+    """Run one resumable ablation group and propagate failures."""
     cmd = [python, "-B", "run_experiments.py", "--bench", str(bench),
            "--out", str(out), "--methods", ",".join(methods),
            "--cases", cases, "--device", device, "--workers", "1"]
@@ -42,7 +52,8 @@ def run(python, bench, out, methods, cases, device):
     subprocess.run(cmd, check=True)
 
 
-def main():
+def main() -> None:
+    """Parse options and run each completed ablation group."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--bench", type=Path, default=Path("benchmark"))
     parser.add_argument("--device", default="cuda")
@@ -61,6 +72,8 @@ def main():
         SEARCH_METHODS, dist_c, args.device)
     run(args.python, args.bench, Path("results/ablation_oracle"),
         ORACLE_METHODS, dist_c, args.device)
+    run(args.python, args.bench, Path("results/ablation_joint_oracle"),
+        JOINT_ORACLE_METHODS, dist_c, args.device)
     print("all ablations complete", flush=True)
 
 

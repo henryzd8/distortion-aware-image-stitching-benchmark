@@ -4,4 +4,6 @@ __pycache__/
 
 benchmark/cases/
 benchmark/source_crop_*.tif
+benchmark_k1_magnitude/cases/
+benchmark_k1_magnitude/source_crop_*.tif
 results/dry_run_check/

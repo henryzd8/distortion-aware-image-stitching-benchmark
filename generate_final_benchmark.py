@@ -1,9 +1,11 @@
-# Final benchmark: N x N tile grid over several crops and seeds, k1-only
-# distortion, uniform-integer position noise. One NPZ per condition.
+"""Generate deterministic tiled benchmarks with known geometry and distortion."""
+
+from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
+from typing import Any, Sequence
 
 import numpy as np
 import tifffile
@@ -20,7 +22,13 @@ DEFAULT_CROPS = [(26000, 6000), (38000, 6000),
 DEFAULT_SEEDS = (2026, 2027)
 
 
-def apply_radial_distortion(image, k1, k2=0.0, order=1):
+def apply_radial_distortion(
+    image: np.ndarray,
+    k1: float,
+    k2: float = 0.0,
+    order: int = 1,
+) -> np.ndarray:
+    """Apply the tile-centred radial distortion model to one image."""
     image = np.asarray(image)
     h, w = image.shape[-2:]
     y_idx, x_idx = np.indices((h, w), dtype=np.float64)
@@ -42,7 +50,14 @@ def apply_radial_distortion(image, k1, k2=0.0, order=1):
     return map_coordinates(image, [y_u, x_u], order=order, mode="nearest")
 
 
-def read_window(path, x, y, width, height):
+def read_window(
+    path: Path,
+    x: int,
+    y: int,
+    width: int,
+    height: int,
+) -> np.ndarray:
+    """Read and validate a bounded window from a YX TIFF image."""
     with tifffile.TiffFile(path) as tif:
         series = tif.series[0]
         if series.axes != "YX":
@@ -61,7 +76,14 @@ def read_window(path, x, y, width, height):
         del mapped
 
 
-def case_name(k1, noise, crop_id, seed, k2=0.0):
+def case_name(
+    k1: float,
+    noise: int,
+    crop_id: int,
+    seed: int,
+    k2: float = 0.0,
+) -> str:
+    """Build the stable filename stem for one benchmark condition."""
     k = f"k1_{k1:+.4f}_noise_{noise:02d}".replace("+", "p").replace("-", "m")
     if abs(k2) > 1e-15:
         q = f"_k2_{k2:+.4f}".replace("+", "p").replace("-", "m")
@@ -69,15 +91,26 @@ def case_name(k1, noise, crop_id, seed, k2=0.0):
     return f"c{crop_id}_s{seed}_{k}"
 
 
-def position_case_seed(crop_id, seed, noise):
+def position_case_seed(crop_id: int, seed: int, noise: int) -> int:
+    """Return the reproducible seed for a crop, replicate, and noise level."""
     return int(seed + 1_000_003 * crop_id + 1009 * noise)
 
 
-def generate_benchmark(source, output, grid=3, tile_size=1024, overlap=0.15,
-                       crops=DEFAULT_CROPS, seeds=DEFAULT_SEEDS,
-                       k1_values=DEFAULT_K1, k2_values=(0.0,),
-                       noise_values=DEFAULT_NOISE,
-                       interp_order=5, crop_size=6144):
+def generate_benchmark(
+    source: Path,
+    output: Path,
+    grid: int = 3,
+    tile_size: int = 1024,
+    overlap: float = 0.15,
+    crops: Sequence[tuple[int, int]] = DEFAULT_CROPS,
+    seeds: Sequence[int] = DEFAULT_SEEDS,
+    k1_values: Sequence[float] = DEFAULT_K1,
+    k2_values: Sequence[float] = (0.0,),
+    noise_values: Sequence[int] = DEFAULT_NOISE,
+    interp_order: int = 5,
+    crop_size: int = 6144,
+) -> dict[str, Any]:
+    """Write crop images, case NPZ files, and the corresponding manifest."""
     if output.exists() and any(output.iterdir()):
         raise FileExistsError(f"output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
@@ -195,10 +228,14 @@ def generate_benchmark(source, output, grid=3, tile_size=1024, overlap=0.15,
         "step": step,
         "extent": extent,
         "interpolation_order": interp_order,
-        "distortion_model": "shared k1/k2 radial model per tile, local tile-centered coordinates",
-        "position_noise_distribution": "uniform integer in [-level, level] independently for y and x",
-        "position_noise_pairing": "same realization reused across k1 levels within (crop, seed, noise)",
-        "zero_noise_seed_policy": "only the first seed is retained because all zero-noise seeds are identical",
+        "distortion_model": "shared k1/k2 radial model per tile, local "
+        "tile-centered coordinates",
+        "position_noise_distribution": "uniform integer in [-level, level] "
+        "independently for y and x",
+        "position_noise_pairing": "same realization reused across k1 levels "
+        "within (crop, seed, noise)",
+        "zero_noise_seed_policy": "only the first seed is retained because all "
+        "zero-noise seeds are identical",
         "k1_values": list(k1_values),
         "k2_values": list(k2_values),
         "noise_values": list(noise_values),
@@ -213,7 +250,8 @@ def generate_benchmark(source, output, grid=3, tile_size=1024, overlap=0.15,
     return metadata
 
 
-def _parse_pairs(text):
+def _parse_pairs(text: str) -> list[tuple[int, int]]:
+    """Parse semicolon-separated integer coordinate pairs."""
     out = []
     for part in text.split(";"):
         x, y = (int(v) for v in part.split(","))
@@ -221,7 +259,8 @@ def _parse_pairs(text):
     return out
 
 
-def main():
+def main() -> None:
+    """Parse CLI options and generate the requested benchmark."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, default=Path(DEFAULT_SOURCE))
     parser.add_argument("--output", type=Path, required=True)
@@ -235,7 +274,8 @@ def main():
     parser.add_argument("--k1", type=str,
                         default=",".join(f"{v:.4f}" for v in DEFAULT_K1))
     parser.add_argument("--k2", type=str, default="0.0000",
-                        help="generation-only higher-order radial coefficients; estimators remain k1-only")
+                        help="generation-only higher-order radial coefficients; "
+                        "estimators remain k1-only")
     parser.add_argument("--noise", type=str,
                         default=",".join(str(v) for v in DEFAULT_NOISE))
     parser.add_argument("--interp-order", type=int, default=5)

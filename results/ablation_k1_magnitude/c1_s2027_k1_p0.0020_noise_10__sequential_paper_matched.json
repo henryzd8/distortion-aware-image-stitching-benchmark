@@ -1,0 +1,143 @@
+{
+ "case": "c1_s2027_k1_p0.0020_noise_10",
+ "method": "sequential_paper_matched",
+ "status": "ok",
+ "k1_true": 0.002,
+ "noise": 10,
+ "ls": 0,
+ "k2_true": 0.0,
+ "device": "cuda",
+ "protocol_version": "2026-08-11-rigorous-v12",
+ "mi_quantization": {
+  "algorithm": "MiniBatchKMeans",
+  "batch_size": 10000,
+  "max_iter": 300,
+  "random_seed": 1000
+ },
+ "warp_backend": "torch_grid_sample_bicubic",
+ "joint_k1_tol": 0.0,
+ "joint_update_order": "positions_first",
+ "method_settings": {
+  "paper_style": true,
+  "pre_stitch_gamma_schedule": "paper_default_16",
+  "k1_bounds": [
+   -0.015,
+   0.015
+  ],
+  "boundary_px": 400,
+  "local_search": 0,
+  "skip_diagonal": false,
+  "final_position_gamma": 1.0
+ },
+ "k1": 0.00043662614858108886,
+ "k1_err": 0.0015633738514189111,
+ "k1_signed": -0.0015633738514189111,
+ "k1_hist": [
+  0.00043662614858108886
+ ],
+ "position_history": null,
+ "iterations": 1,
+ "positions": [
+  [
+   4,
+   4
+  ],
+  [
+   4,
+   875
+  ],
+  [
+   4,
+   1747
+  ],
+  [
+   876,
+   4
+  ],
+  [
+   876,
+   875
+  ],
+  [
+   876,
+   1747
+  ],
+  [
+   1747,
+   4
+  ],
+  [
+   1747,
+   875
+  ],
+  [
+   1747,
+   1747
+  ]
+ ],
+ "positions_pre": [
+  [
+   4,
+   4
+  ],
+  [
+   4,
+   876
+  ],
+  [
+   4,
+   1748
+  ],
+  [
+   876,
+   4
+  ],
+  [
+   876,
+   876
+  ],
+  [
+   876,
+   1748
+  ],
+  [
+   1748,
+   4
+  ],
+  [
+   1748,
+   876
+  ],
+  [
+   1748,
+   1748
+  ]
+ ],
+ "selected_start": null,
+ "selection_scores": null,
+ "candidate_k1": null,
+ "candidate_positions": null,
+ "candidate_times_s": null,
+ "final_selection_score": null,
+ "pos_rmse": 2.7688746209726918,
+ "pos_mae": 1.5,
+ "pos_max": 3.0,
+ "pre_rmse": 3.6514837167011076,
+ "pre_mae": 2.0,
+ "at_bound": false,
+ "time_s": 666.97,
+ "distortion_psnr": 59.75919268762268,
+ "distortion_ssim": 0.9994953419944493,
+ "distortion_ncc": 0.9999304770041095,
+ "distortion_mse": 4539.701931018597,
+ "distortion_valid_fraction": 0.18407228257921007,
+ "distortion_coverage_fraction": 1.0,
+ "psnr": 43.6502093693414,
+ "ssim": 0.9931159837512988,
+ "ncc": 0.9971606473879008,
+ "mse": 185321.4419036688,
+ "valid_fraction": 0.18407228257921007,
+ "coverage_fraction": 1.0,
+ "seam_true": 0.002188552038033112,
+ "seam_est": 0.0010674750607117035
+}
