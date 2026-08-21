@@ -66,7 +66,7 @@
   "cases": [
     {
       "case": "c0_s2026_k1_m0.0040_noise_00",
-      "file": "cases\\c0_s2026_k1_m0.0040_noise_00.npz",
+      "file": "cases/c0_s2026_k1_m0.0040_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": -0.004,
@@ -120,7 +120,7 @@
     },
     {
       "case": "c0_s2026_k1_m0.0040_noise_10",
-      "file": "cases\\c0_s2026_k1_m0.0040_noise_10.npz",
+      "file": "cases/c0_s2026_k1_m0.0040_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": -0.004,
@@ -174,7 +174,7 @@
     },
     {
       "case": "c0_s2026_k1_m0.0020_noise_00",
-      "file": "cases\\c0_s2026_k1_m0.0020_noise_00.npz",
+      "file": "cases/c0_s2026_k1_m0.0020_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": -0.002,
@@ -228,7 +228,7 @@
     },
     {
       "case": "c0_s2026_k1_m0.0020_noise_10",
-      "file": "cases\\c0_s2026_k1_m0.0020_noise_10.npz",
+      "file": "cases/c0_s2026_k1_m0.0020_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": -0.002,
@@ -282,7 +282,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0020_noise_00",
-      "file": "cases\\c0_s2026_k1_p0.0020_noise_00.npz",
+      "file": "cases/c0_s2026_k1_p0.0020_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.002,
@@ -336,7 +336,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0020_noise_10",
-      "file": "cases\\c0_s2026_k1_p0.0020_noise_10.npz",
+      "file": "cases/c0_s2026_k1_p0.0020_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.002,
@@ -390,7 +390,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0040_noise_00",
-      "file": "cases\\c0_s2026_k1_p0.0040_noise_00.npz",
+      "file": "cases/c0_s2026_k1_p0.0040_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.004,
@@ -444,7 +444,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0040_noise_10",
-      "file": "cases\\c0_s2026_k1_p0.0040_noise_10.npz",
+      "file": "cases/c0_s2026_k1_p0.0040_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.004,
@@ -498,7 +498,7 @@
     },
     {
       "case": "c0_s2027_k1_m0.0040_noise_10",
-      "file": "cases\\c0_s2027_k1_m0.0040_noise_10.npz",
+      "file": "cases/c0_s2027_k1_m0.0040_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": -0.004,
@@ -552,7 +552,7 @@
     },
     {
       "case": "c0_s2027_k1_m0.0020_noise_10",
-      "file": "cases\\c0_s2027_k1_m0.0020_noise_10.npz",
+      "file": "cases/c0_s2027_k1_m0.0020_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": -0.002,
@@ -606,7 +606,7 @@
     },
     {
       "case": "c0_s2027_k1_p0.0020_noise_10",
-      "file": "cases\\c0_s2027_k1_p0.0020_noise_10.npz",
+      "file": "cases/c0_s2027_k1_p0.0020_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": 0.002,
@@ -660,7 +660,7 @@
     },
     {
       "case": "c0_s2027_k1_p0.0040_noise_10",
-      "file": "cases\\c0_s2027_k1_p0.0040_noise_10.npz",
+      "file": "cases/c0_s2027_k1_p0.0040_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": 0.004,
@@ -714,7 +714,7 @@
     },
     {
       "case": "c1_s2026_k1_m0.0040_noise_00",
-      "file": "cases\\c1_s2026_k1_m0.0040_noise_00.npz",
+      "file": "cases/c1_s2026_k1_m0.0040_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": -0.004,
@@ -768,7 +768,7 @@
     },
     {
       "case": "c1_s2026_k1_m0.0040_noise_10",
-      "file": "cases\\c1_s2026_k1_m0.0040_noise_10.npz",
+      "file": "cases/c1_s2026_k1_m0.0040_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": -0.004,
@@ -822,7 +822,7 @@
     },
     {
       "case": "c1_s2026_k1_m0.0020_noise_00",
-      "file": "cases\\c1_s2026_k1_m0.0020_noise_00.npz",
+      "file": "cases/c1_s2026_k1_m0.0020_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": -0.002,
@@ -876,7 +876,7 @@
     },
     {
       "case": "c1_s2026_k1_m0.0020_noise_10",
-      "file": "cases\\c1_s2026_k1_m0.0020_noise_10.npz",
+      "file": "cases/c1_s2026_k1_m0.0020_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": -0.002,
@@ -930,7 +930,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0020_noise_00",
-      "file": "cases\\c1_s2026_k1_p0.0020_noise_00.npz",
+      "file": "cases/c1_s2026_k1_p0.0020_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.002,
@@ -984,7 +984,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0020_noise_10",
-      "file": "cases\\c1_s2026_k1_p0.0020_noise_10.npz",
+      "file": "cases/c1_s2026_k1_p0.0020_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.002,
@@ -1038,7 +1038,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0040_noise_00",
-      "file": "cases\\c1_s2026_k1_p0.0040_noise_00.npz",
+      "file": "cases/c1_s2026_k1_p0.0040_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.004,
@@ -1092,7 +1092,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0040_noise_10",
-      "file": "cases\\c1_s2026_k1_p0.0040_noise_10.npz",
+      "file": "cases/c1_s2026_k1_p0.0040_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.004,
@@ -1146,7 +1146,7 @@
     },
     {
       "case": "c1_s2027_k1_m0.0040_noise_10",
-      "file": "cases\\c1_s2027_k1_m0.0040_noise_10.npz",
+      "file": "cases/c1_s2027_k1_m0.0040_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": -0.004,
@@ -1200,7 +1200,7 @@
     },
     {
       "case": "c1_s2027_k1_m0.0020_noise_10",
-      "file": "cases\\c1_s2027_k1_m0.0020_noise_10.npz",
+      "file": "cases/c1_s2027_k1_m0.0020_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": -0.002,
@@ -1254,7 +1254,7 @@
     },
     {
       "case": "c1_s2027_k1_p0.0020_noise_10",
-      "file": "cases\\c1_s2027_k1_p0.0020_noise_10.npz",
+      "file": "cases/c1_s2027_k1_p0.0020_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": 0.002,
@@ -1308,7 +1308,7 @@
     },
     {
       "case": "c1_s2027_k1_p0.0040_noise_10",
-      "file": "cases\\c1_s2027_k1_p0.0040_noise_10.npz",
+      "file": "cases/c1_s2027_k1_p0.0040_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": 0.004,

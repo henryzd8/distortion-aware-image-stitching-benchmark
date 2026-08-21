@@ -41,7 +41,9 @@ def check_manifest(bench: Path, manifest: dict[str, Any]) -> None:
     for name in files:
         if not name:
             raise ValueError("manifest contains an empty file name")
-        path = (bench / name).resolve()
+        # Manifests are portable JSON and may have been generated on Windows.
+        manifest_name = Path(str(name).replace("\\", "/"))
+        path = (bench / manifest_name).resolve()
         if not path.is_relative_to(root):
             raise ValueError(f"manifest path escapes the benchmark: {name}")
         if not path.is_file():
@@ -93,7 +95,7 @@ def _init(
     _G["device"] = device
     _G["cases"] = {c["case"]: c for c in manifest["cases"]}
     _G["crops"] = {
-        c["id"]: np.asarray(tifffile.imread(bench / c["file"]))
+        c["id"]: np.asarray(tifffile.imread(rfe.benchmark_path(bench, c["file"])))
         for c in manifest["crops"]
     }
 

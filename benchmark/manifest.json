@@ -95,7 +95,7 @@
   "cases": [
     {
       "case": "c0_s2026_k1_m0.0080_noise_00",
-      "file": "cases\\c0_s2026_k1_m0.0080_noise_00.npz",
+      "file": "cases/c0_s2026_k1_m0.0080_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": -0.008,
@@ -149,7 +149,7 @@
     },
     {
       "case": "c0_s2026_k1_m0.0080_noise_10",
-      "file": "cases\\c0_s2026_k1_m0.0080_noise_10.npz",
+      "file": "cases/c0_s2026_k1_m0.0080_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": -0.008,
@@ -203,7 +203,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0000_noise_00",
-      "file": "cases\\c0_s2026_k1_p0.0000_noise_00.npz",
+      "file": "cases/c0_s2026_k1_p0.0000_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.0,
@@ -257,7 +257,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0000_noise_10",
-      "file": "cases\\c0_s2026_k1_p0.0000_noise_10.npz",
+      "file": "cases/c0_s2026_k1_p0.0000_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.0,
@@ -311,7 +311,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0080_noise_00",
-      "file": "cases\\c0_s2026_k1_p0.0080_noise_00.npz",
+      "file": "cases/c0_s2026_k1_p0.0080_noise_00.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.008,
@@ -365,7 +365,7 @@
     },
     {
       "case": "c0_s2026_k1_p0.0080_noise_10",
-      "file": "cases\\c0_s2026_k1_p0.0080_noise_10.npz",
+      "file": "cases/c0_s2026_k1_p0.0080_noise_10.npz",
       "crop_id": 0,
       "seed": 2026,
       "k1_true": 0.008,
@@ -419,7 +419,7 @@
     },
     {
       "case": "c0_s2027_k1_m0.0080_noise_10",
-      "file": "cases\\c0_s2027_k1_m0.0080_noise_10.npz",
+      "file": "cases/c0_s2027_k1_m0.0080_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": -0.008,
@@ -473,7 +473,7 @@
     },
     {
       "case": "c0_s2027_k1_p0.0000_noise_10",
-      "file": "cases\\c0_s2027_k1_p0.0000_noise_10.npz",
+      "file": "cases/c0_s2027_k1_p0.0000_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": 0.0,
@@ -527,7 +527,7 @@
     },
     {
       "case": "c0_s2027_k1_p0.0080_noise_10",
-      "file": "cases\\c0_s2027_k1_p0.0080_noise_10.npz",
+      "file": "cases/c0_s2027_k1_p0.0080_noise_10.npz",
       "crop_id": 0,
       "seed": 2027,
       "k1_true": 0.008,
@@ -581,7 +581,7 @@
     },
     {
       "case": "c1_s2026_k1_m0.0080_noise_00",
-      "file": "cases\\c1_s2026_k1_m0.0080_noise_00.npz",
+      "file": "cases/c1_s2026_k1_m0.0080_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": -0.008,
@@ -635,7 +635,7 @@
     },
     {
       "case": "c1_s2026_k1_m0.0080_noise_10",
-      "file": "cases\\c1_s2026_k1_m0.0080_noise_10.npz",
+      "file": "cases/c1_s2026_k1_m0.0080_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": -0.008,
@@ -689,7 +689,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0000_noise_00",
-      "file": "cases\\c1_s2026_k1_p0.0000_noise_00.npz",
+      "file": "cases/c1_s2026_k1_p0.0000_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.0,
@@ -743,7 +743,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0000_noise_10",
-      "file": "cases\\c1_s2026_k1_p0.0000_noise_10.npz",
+      "file": "cases/c1_s2026_k1_p0.0000_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.0,
@@ -797,7 +797,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0080_noise_00",
-      "file": "cases\\c1_s2026_k1_p0.0080_noise_00.npz",
+      "file": "cases/c1_s2026_k1_p0.0080_noise_00.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.008,
@@ -851,7 +851,7 @@
     },
     {
       "case": "c1_s2026_k1_p0.0080_noise_10",
-      "file": "cases\\c1_s2026_k1_p0.0080_noise_10.npz",
+      "file": "cases/c1_s2026_k1_p0.0080_noise_10.npz",
       "crop_id": 1,
       "seed": 2026,
       "k1_true": 0.008,
@@ -905,7 +905,7 @@
     },
     {
       "case": "c1_s2027_k1_m0.0080_noise_10",
-      "file": "cases\\c1_s2027_k1_m0.0080_noise_10.npz",
+      "file": "cases/c1_s2027_k1_m0.0080_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": -0.008,
@@ -959,7 +959,7 @@
     },
     {
       "case": "c1_s2027_k1_p0.0000_noise_10",
-      "file": "cases\\c1_s2027_k1_p0.0000_noise_10.npz",
+      "file": "cases/c1_s2027_k1_p0.0000_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": 0.0,
@@ -1013,7 +1013,7 @@
     },
     {
       "case": "c1_s2027_k1_p0.0080_noise_10",
-      "file": "cases\\c1_s2027_k1_p0.0080_noise_10.npz",
+      "file": "cases/c1_s2027_k1_p0.0080_noise_10.npz",
       "crop_id": 1,
       "seed": 2027,
       "k1_true": 0.008,
@@ -1067,7 +1067,7 @@
     },
     {
       "case": "c2_s2026_k1_m0.0080_noise_00",
-      "file": "cases\\c2_s2026_k1_m0.0080_noise_00.npz",
+      "file": "cases/c2_s2026_k1_m0.0080_noise_00.npz",
       "crop_id": 2,
       "seed": 2026,
       "k1_true": -0.008,
@@ -1121,7 +1121,7 @@
     },
     {
       "case": "c2_s2026_k1_m0.0080_noise_10",
-      "file": "cases\\c2_s2026_k1_m0.0080_noise_10.npz",
+      "file": "cases/c2_s2026_k1_m0.0080_noise_10.npz",
       "crop_id": 2,
       "seed": 2026,
       "k1_true": -0.008,
@@ -1175,7 +1175,7 @@
     },
     {
       "case": "c2_s2026_k1_p0.0000_noise_00",
-      "file": "cases\\c2_s2026_k1_p0.0000_noise_00.npz",
+      "file": "cases/c2_s2026_k1_p0.0000_noise_00.npz",
       "crop_id": 2,
       "seed": 2026,
       "k1_true": 0.0,
@@ -1229,7 +1229,7 @@
     },
     {
       "case": "c2_s2026_k1_p0.0000_noise_10",
-      "file": "cases\\c2_s2026_k1_p0.0000_noise_10.npz",
+      "file": "cases/c2_s2026_k1_p0.0000_noise_10.npz",
       "crop_id": 2,
       "seed": 2026,
       "k1_true": 0.0,
@@ -1283,7 +1283,7 @@
     },
     {
       "case": "c2_s2026_k1_p0.0080_noise_00",
-      "file": "cases\\c2_s2026_k1_p0.0080_noise_00.npz",
+      "file": "cases/c2_s2026_k1_p0.0080_noise_00.npz",
       "crop_id": 2,
       "seed": 2026,
       "k1_true": 0.008,
@@ -1337,7 +1337,7 @@
     },
     {
       "case": "c2_s2026_k1_p0.0080_noise_10",
-      "file": "cases\\c2_s2026_k1_p0.0080_noise_10.npz",
+      "file": "cases/c2_s2026_k1_p0.0080_noise_10.npz",
       "crop_id": 2,
       "seed": 2026,
       "k1_true": 0.008,
@@ -1391,7 +1391,7 @@
     },
     {
       "case": "c2_s2027_k1_m0.0080_noise_10",
-      "file": "cases\\c2_s2027_k1_m0.0080_noise_10.npz",
+      "file": "cases/c2_s2027_k1_m0.0080_noise_10.npz",
       "crop_id": 2,
       "seed": 2027,
       "k1_true": -0.008,
@@ -1445,7 +1445,7 @@
     },
     {
       "case": "c2_s2027_k1_p0.0000_noise_10",
-      "file": "cases\\c2_s2027_k1_p0.0000_noise_10.npz",
+      "file": "cases/c2_s2027_k1_p0.0000_noise_10.npz",
       "crop_id": 2,
       "seed": 2027,
       "k1_true": 0.0,
@@ -1499,7 +1499,7 @@
     },
     {
       "case": "c2_s2027_k1_p0.0080_noise_10",
-      "file": "cases\\c2_s2027_k1_p0.0080_noise_10.npz",
+      "file": "cases/c2_s2027_k1_p0.0080_noise_10.npz",
       "crop_id": 2,
       "seed": 2027,
       "k1_true": 0.008,
@@ -1553,7 +1553,7 @@
     },
     {
       "case": "c3_s2026_k1_m0.0080_noise_00",
-      "file": "cases\\c3_s2026_k1_m0.0080_noise_00.npz",
+      "file": "cases/c3_s2026_k1_m0.0080_noise_00.npz",
       "crop_id": 3,
       "seed": 2026,
       "k1_true": -0.008,
@@ -1607,7 +1607,7 @@
     },
     {
       "case": "c3_s2026_k1_m0.0080_noise_10",
-      "file": "cases\\c3_s2026_k1_m0.0080_noise_10.npz",
+      "file": "cases/c3_s2026_k1_m0.0080_noise_10.npz",
       "crop_id": 3,
       "seed": 2026,
       "k1_true": -0.008,
@@ -1661,7 +1661,7 @@
     },
     {
       "case": "c3_s2026_k1_p0.0000_noise_00",
-      "file": "cases\\c3_s2026_k1_p0.0000_noise_00.npz",
+      "file": "cases/c3_s2026_k1_p0.0000_noise_00.npz",
       "crop_id": 3,
       "seed": 2026,
       "k1_true": 0.0,
@@ -1715,7 +1715,7 @@
     },
     {
       "case": "c3_s2026_k1_p0.0000_noise_10",
-      "file": "cases\\c3_s2026_k1_p0.0000_noise_10.npz",
+      "file": "cases/c3_s2026_k1_p0.0000_noise_10.npz",
       "crop_id": 3,
       "seed": 2026,
       "k1_true": 0.0,
@@ -1769,7 +1769,7 @@
     },
     {
       "case": "c3_s2026_k1_p0.0080_noise_00",
-      "file": "cases\\c3_s2026_k1_p0.0080_noise_00.npz",
+      "file": "cases/c3_s2026_k1_p0.0080_noise_00.npz",
       "crop_id": 3,
       "seed": 2026,
       "k1_true": 0.008,
@@ -1823,7 +1823,7 @@
     },
     {
       "case": "c3_s2026_k1_p0.0080_noise_10",
-      "file": "cases\\c3_s2026_k1_p0.0080_noise_10.npz",
+      "file": "cases/c3_s2026_k1_p0.0080_noise_10.npz",
       "crop_id": 3,
       "seed": 2026,
       "k1_true": 0.008,
@@ -1877,7 +1877,7 @@
     },
     {
       "case": "c3_s2027_k1_m0.0080_noise_10",
-      "file": "cases\\c3_s2027_k1_m0.0080_noise_10.npz",
+      "file": "cases/c3_s2027_k1_m0.0080_noise_10.npz",
       "crop_id": 3,
       "seed": 2027,
       "k1_true": -0.008,
@@ -1931,7 +1931,7 @@
     },
     {
       "case": "c3_s2027_k1_p0.0000_noise_10",
-      "file": "cases\\c3_s2027_k1_p0.0000_noise_10.npz",
+      "file": "cases/c3_s2027_k1_p0.0000_noise_10.npz",
       "crop_id": 3,
       "seed": 2027,
       "k1_true": 0.0,
@@ -1985,7 +1985,7 @@
     },
     {
       "case": "c3_s2027_k1_p0.0080_noise_10",
-      "file": "cases\\c3_s2027_k1_p0.0080_noise_10.npz",
+      "file": "cases/c3_s2027_k1_p0.0080_noise_10.npz",
       "crop_id": 3,
       "seed": 2027,
       "k1_true": 0.008,

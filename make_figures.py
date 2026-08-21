@@ -12,7 +12,13 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from analyze_results import bootstrap_ci, load_all, paired_deltas
+from analyze_results import (
+    bootstrap_ci,
+    check_complete,
+    check_results,
+    load_all,
+    paired_deltas,
+)
 
 COLORS = {
     "joint": "#1f77b4",
@@ -254,13 +260,24 @@ def fig5_signed_k1(
     plt.close(fig)
 
 
-def method_rows(
+def validated_rows(
     results_dir: Path,
     manifest: dict[str, Any],
+    methods: tuple[str, ...],
+) -> list[Record]:
+    """Load one complete, provenance-consistent result directory."""
+    rows = load_all(results_dir, manifest)
+    check_complete(rows, manifest, methods)
+    check_results(rows)
+    return rows
+
+
+def method_rows(
+    rows: list[Record],
     method: str,
 ) -> list[Record]:
-    """Load only one method's records from a result directory."""
-    return [r for r in load_all(results_dir, manifest) if r["method"] == method]
+    """Select one method from an already validated result directory."""
+    return [r for r in rows if r["method"] == method]
 
 
 def main() -> None:
@@ -273,21 +290,42 @@ def main() -> None:
 
     manifest = json.loads((args.bench / "manifest.json").read_text("utf-8"))
 
-    joint = method_rows(Path("results/distortcorrect"), manifest,
-                        "dcs_paper_style")
-    seq = method_rows(Path("results/sequential"), manifest,
-                      "sequential_paper_matched")
+    joint = method_rows(
+        validated_rows(Path("results/distortcorrect"), manifest,
+                       ("dcs_paper_style",)),
+        "dcs_paper_style",
+    )
+    seq = method_rows(
+        validated_rows(Path("results/sequential"), manifest,
+                       ("sequential_paper_matched",)),
+        "sequential_paper_matched",
+    )
+    feedback_rows = validated_rows(
+        Path("results/ablation_feedback"), manifest,
+        ("dcs_paper_iter_1", "dcs_paper_iter_2",
+         "dcs_paper_iter_5", "dcs_paper_iter_10"),
+    )
     feedback = [
-        method_rows(Path("results/ablation_feedback"), manifest,
-                    f"dcs_paper_iter_{it}")
+        method_rows(feedback_rows, f"dcs_paper_iter_{it}")
         for it in (1, 2, 5, 10)
     ]
-    joint_np = method_rows(Path("results/ablation_prestitch"), manifest,
-                           "dcs_paper_no_prestitch")
-    seq_np = method_rows(Path("results/ablation_prestitch"), manifest,
-                         "sequential_paper_no_prestitch")
-    oracle_rows = method_rows(Path("results/ablation_oracle"), manifest,
-                              "oracle_k1_paper")
+    prestitch_rows = validated_rows(
+        Path("results/ablation_prestitch"), manifest,
+        ("dcs_paper_no_prestitch", "sequential_paper_no_prestitch"),
+    )
+    joint_np = method_rows(prestitch_rows, "dcs_paper_no_prestitch")
+    seq_np = method_rows(prestitch_rows, "sequential_paper_no_prestitch")
+    distorted_manifest = dict(manifest)
+    distorted_manifest["cases"] = [
+        case for case in manifest["cases"]
+        if abs(case["k1_true"]) > 1e-12
+    ]
+    distorted_manifest["case_count"] = len(distorted_manifest["cases"])
+    oracle_rows = method_rows(
+        validated_rows(Path("results/ablation_oracle"), distorted_manifest,
+                       ("oracle_k1_paper",)),
+        "oracle_k1_paper",
+    )
 
     fig1_primary(joint, seq, args.out)
     fig2_feedback_dose(feedback, joint, args.out)

@@ -168,6 +168,11 @@ def method_settings(method: str) -> dict[str, Any] | None:
     return None
 
 
+def benchmark_path(bench: Path, name: str) -> Path:
+    """Return a manifest-relative path with portable separators."""
+    return bench / Path(str(name).replace("\\", "/"))
+
+
 def resolve_device(requested: str) -> str:
     """Resolve a requested CPU/CUDA device and fail clearly when unavailable."""
     if requested == "cpu":
@@ -614,7 +619,7 @@ def process_case(
     """Run selected methods, calculate metrics, and write JSON records."""
     device = resolve_device(device)
     case = meta["case"]
-    d = np.load(bench / "cases" / f"{case}.npz")
+    d = np.load(benchmark_path(bench, meta["file"]))
     tiles = d["tiles"]
     p_true = d["positions_true"]
     p_ini = d["positions_ini"]
@@ -761,7 +766,7 @@ def main() -> None:
     source_crops = {}
     for c in manifest["crops"]:
         source_crops[c["id"]] = np.asarray(
-            tifffile.imread(args.bench / c["file"])
+            tifffile.imread(benchmark_path(args.bench, c["file"]))
         )
 
     methods = tuple(m.strip() for m in args.methods.split(",") if m.strip())

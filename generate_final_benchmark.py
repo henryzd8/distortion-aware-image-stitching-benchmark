@@ -208,7 +208,7 @@ def generate_benchmark(
                         )
                         manifest_cases.append({
                             "case": name,
-                            "file": str(case_path.relative_to(output)),
+                            "file": case_path.relative_to(output).as_posix(),
                             "crop_id": cid,
                             "seed": seed,
                             "k1_true": k1,

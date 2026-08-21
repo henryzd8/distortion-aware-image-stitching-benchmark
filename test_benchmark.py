@@ -91,6 +91,39 @@ def test_primary_results_are_complete_and_paired() -> None:
     assert len(deltas) == manifest["case_count"]
 
 
+def test_primary_result_filenames_match_batch_runner() -> None:
+    """Ensure persisted primary files can be reused by the resumable runner."""
+    manifest = json.loads((ROOT / "benchmark" / "manifest.json").read_text())
+    expected = {case["case"] for case in manifest["cases"]}
+    for directory, method in (
+        ("distortcorrect", "dcs_paper_style"),
+        ("sequential", "sequential_paper_matched"),
+    ):
+        actual = {
+            path.name
+            for path in (ROOT / "results" / directory).glob("*.json")
+        }
+        assert actual == {
+            f"{case}__{method}.json" for case in expected
+        }
+
+
+def test_result_filenames_match_record_identity() -> None:
+    """Ensure every raw result filename is resumable and self-identifying."""
+    directories = (
+        "results/distortcorrect", "results/sequential",
+        "results/ablation_feedback", "results/ablation_prestitch",
+        "results/ablation_search", "results/ablation_oracle",
+        "results/ablation_joint_oracle", "results/ablation_k1_magnitude",
+    )
+    for directory in directories:
+        for path in (ROOT / directory).glob("*.json"):
+            record = json.loads(path.read_text())
+            assert path.name == (
+                f"{record['case']}__{record['method']}.json"
+            )
+
+
 def test_feedback_ablation_is_complete() -> None:
     """Check all feedback iteration arms across the primary cases."""
     manifest = json.loads((ROOT / "benchmark" / "manifest.json").read_text())
@@ -183,6 +216,8 @@ def main() -> None:
     test_cpu_and_cuda_classes_are_distinct()
     test_cpu_sequential_pipeline_runs()
     test_primary_results_are_complete_and_paired()
+    test_primary_result_filenames_match_batch_runner()
+    test_result_filenames_match_record_identity()
     test_feedback_ablation_is_complete()
     test_prestitch_ablation_is_complete()
     test_search_ablation_is_complete_on_distorted_cases()

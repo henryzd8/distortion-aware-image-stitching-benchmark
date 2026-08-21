@@ -7,6 +7,7 @@ from typing import Any, Callable, Sequence
 import numpy as np
 import torch
 import torch.nn.functional as F
+from sklearn.cluster import MiniBatchKMeans
 
 # Adapted from code originally authored by Johan Öfverstedt (2021), MIT License.
 # Modified by Hu Cang (2024).
@@ -277,9 +278,6 @@ def align_translation(
     else:
         return result, None
 
-from sklearn.cluster import MiniBatchKMeans
-
-
 def image2cat_kmeans(
     I: np.ndarray,
     k: int,
@@ -288,8 +286,7 @@ def image2cat_kmeans(
     random_seed: int = 1000,
 ) -> np.ndarray:
     """Quantize a grayscale image into integer MiniBatchKMeans labels."""
-    total_shape = I.shape
-    spatial_shape = total_shape
+    spatial_shape = I.shape
     channels = 1
     if k == 1:
         return np.zeros(spatial_shape, dtype='int')

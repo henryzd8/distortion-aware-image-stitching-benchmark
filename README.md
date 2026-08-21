@@ -30,8 +30,18 @@ distortion coefficients.
 - `test_benchmark.py`: completeness, provenance, and smoke checks.
 
 Technical benchmark inputs are kept out of Git by the repository `.gitignore`
-because of their size; the manifests and result tables remain available for
-inspection.
+because the current local bundle is about 1.4 GB.  The manifests and result
+tables remain available for inspection, but a clean clone cannot rerun the
+experiment or the full verification suite until the matching `benchmark/` and
+`benchmark_k1_magnitude/` input bundle is restored.  For a paper release,
+publish that bundle (or a DOI-backed archive) together with SHA-256 checksums
+and the source-image provenance; the tracked repository alone is not a
+self-contained reproduction package.
+
+The tracked result JSON files record the CUDA protocol used to generate the
+figures.  CPU execution is supported for smoke tests and separate reruns, but
+its spline warp backend is not byte-for-byte equivalent to the CUDA
+`grid_sample` backend.
 
 ## Rebuild the readable exports
 
@@ -61,7 +71,9 @@ The primary summaries can be regenerated with:
 ```bash
 python analyze_results.py \
   --bench benchmark \
-  --results results/comparison \
+  --results results/distortcorrect \
+  --reference-results results/sequential \
+  --out results/comparison \
   --methods dcs_paper_style,sequential_paper_matched
 ```
 
@@ -86,9 +98,10 @@ python run_ablations.py --bench benchmark --device cuda
 ## Verification
 
 ```bash
-python test_benchmark.py
+python -m pytest -q
 python -m py_compile *.py
 ```
 
-The result directories contain per-case JSON records for provenance and the
+These checks require the ignored local input bundle described above.  The
+result directories contain per-case JSON records for provenance and the
 `results/ablation/` directory contains the cleaner tables intended for reading.
